@@ -1,0 +1,104 @@
+{% extends "base.html" %} {% block content %} {% load myfilters %}
+
+<div class="login-register-box">
+  <div id="login">
+    <div class="card passUpdate" id="login-card">
+      <form action="/userLogin/" method="POST">
+        {% csrf_token %}
+        <!--says what to do on form submit-->
+        <!--action= what endpoint to access and method is HTTP method to invoke-->
+        <div class="form-group mb-3">
+          <label for="email">Email</label>
+          {{formLogin.username|addclass:'form-control login'}}
+          {{formLogin.username.errors}}
+        </div>
+        <div class="form-group mb-3">
+          <label for="password">Password</label>
+          {{formLogin.password|addclass:'form-control login'}}
+          {{formLogin.password.errors}}
+        </div>
+        {% if errorMsg|length > 1 %}
+        <label style="color: red; padding-bottom: 0.75rem"
+          >Incorret password or email</label
+        >
+        {% endif %}
+        <button type="submit" class="btn btn-light submitBtn">Login</button>
+      </form>
+    </div>
+  </div>
+  <!--<div class="the-line"></div>-->
+  <div id="register">
+    <div class="card passUpdate" id="register-card">
+      <form action="/userLogin/" method="POST" id="registerForm">
+        {% csrf_token %} {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+        <div class="formbox">
+          <div class="form-group mb-3 left-register">
+            <div class="form-group mb-3">
+              <label for="name">Name</label>
+              {{formRegister.name|addclass:'form-control regsiter'}}
+              {{formRegister.name.errors}}
+            </div>
+            <div class="form-group mb-3">
+              <label for="surname">Surname</label>
+              {{formRegister.surname|addclass:'form-control regsiter'}}
+              {{formRegister.surname.errors}}
+            </div>
+            <div class="form-group mb-3">
+              <label for="email">Email</label>
+              {{formRegister.email|addclass:'form-control regsiter'}}
+              {{formRegister.email.errors}}
+            </div>
+          </div>
+          <div class="form-group mb-3 right-register">
+            <div class="form-group mb-3">
+              <label for="dateOfBirth">Date of Birth</label>
+              {{formRegister.birthDate|addclass:'form-control regsiter'}}
+              {{formRegister.birthDate.errors}}
+            </div>
+            <div class="form-group mb-3">
+              <label for="password">Enter Password</label>
+              {{formRegister.password|addclass:'form-control regsiter'}}
+              {{formRegister.password.errors}}
+            </div>
+            <div class="form-group mb-3">
+              <label for="ConfirmPassword">Confirm Password</label>
+              {{formRegister.password1|addclass:'form-control regsiter'}}
+              {{formRegister.password1.errors}}
+            </div>
+          </div>
+        </div>
+        {% if registerErrorMsg|length > 1 %}
+        <label style="color: red; padding-bottom: 0.75rem"
+          >{{registerErrorMsg}}</label
+        >
+        {% endif %}
+        <button type="submit" class="btn btn-light submitBtn">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  var frm = $("#registerForm");
+  console.log(frm.serialize());
+  frm.submit(function () {
+    $.ajax({
+      type: "post",
+      url: "/register/",
+      data: frm.serialize(),
+      success: function (data) {
+        alert("Registration Successful, please proceed to login continue");
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        // errors usually have alot to do with validation
+        alert(
+          "Error: The entered credentials were rejected, try another email, a more unique password or make sure the password are matching!"
+        );
+      },
+    });
+    return false;
+  });
+</script>
+{% endblock %}

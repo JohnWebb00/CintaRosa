@@ -1,0 +1,24 @@
+##Add project dependencies and libraries here for docker build
+Django==4.2.7
+django-environ>=0.7,<1.0
+django-bootstrap-v5==1.0.11
+django-bootstrap5
+djangorestframework-simplejwt
+djangorestframework
+django-cors-headers
+
+# Add model dependencies
+cppimport
+pybind11
+seaborn
+scikit-learn
+numpy
+pandas
+matplotlib
+eli5
+pydot
+tensorflow
+opencv-python
+
+# Explainable AI
+lime

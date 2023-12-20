@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-cinta-rosa
+spec:
+  selector:
+    matchLabels:
+      app: cinta-rosa-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cinta-rosa-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-t4
+      containers:
+      - name: cinta-rosa-app
+        image: registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest
+        imagePullPolicy: Always  
+        env:
+        - name: "PORT"
+          value: "8000"
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Always
+        resources:
+          limits:
+            nvidia.com/gpu: "1"
+      imagePullSecrets:
+        - name: app-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cinta-rosa-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: cinta-rosa-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000

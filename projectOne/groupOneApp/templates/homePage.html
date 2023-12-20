@@ -1,0 +1,53 @@
+{% extends "base.html" %} 
+{% block content %}
+<body id="home-body">
+<div id="carousel-home" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carousel-home" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carousel-home" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carousel-home" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="static/ribbon.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>United</h5>
+          <p>Together we stand in the fight against breast cancer</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="static/laptop.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Accurate Predictions</h5>
+          <p>Gain valuable insight into your breast health</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="static/doctor.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Act</h5>
+          <p>Seek help and additional information if you are at risk</p>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-home" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel-home" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div id="mission-container">
+    <div id="mission-image-div">
+      <img src="static/mission.png" id="mission-image" alt="...">
+    </div>
+    <div id="mission-statement-div">
+      <h1><u>Welcome to CINT<span style="color: #DF5C93;">A</span> ROS<span style="color: #DF5C93;">A</span>!</u></h1>
+      <p>We at CINT<span style="color: #DF5C93;">A</span> ROS<span style="color: #DF5C93;">A</span> aim to facilitate breast cancer awareness amongst people regardless of their backgrounds. Using our machine learning AI model, your uploaded ultrasound images can help us indicate your risk for breast cancer.</p>
+      <p>Sign up to try it today!</p>
+      <button type="button" class="btn btn-dark register-btn" onclick="window.location.href='{% url 'userLogin' %}'">Register or Sign-in</button>
+    </div>
+</div>
+</body>
+{% endblock %}

@@ -1,0 +1,306 @@
+body{ 
+  border: 0;
+  padding: 0;
+  margin: 0;  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  background-color: whitesmoke;
+}
+
+.navbar {
+  height: 8rem; 
+  width:100%;
+  background-color: #E9D3D0;
+  display: flex;
+  }
+
+.logo-image {
+  padding-left: 30%;
+  width: 35rem;
+  height: 5rem; 
+  margin-bottom: auto;
+  margin-top: 2.5%;
+}
+
+footer {
+  background-color:#E9D3D0;
+  color: white;
+  text-align: center;
+  font-family: 'Saira Condensed';
+  letter-spacing: 0.125rem;
+  padding: 0.625rem 0;
+  width: 100%;
+  height: auto;
+  margin-top: auto; /*makes the footer stick to the bottom*/
+  line-height: 5rem; /*adjusts the position of footer text */
+  }
+
+.logIn-button{
+  width: 6rem;
+  height: 2.5rem;
+  position: relative;
+  right: 20%;
+  background-color: black;
+  border-radius: 0.625rem;
+  color:white;
+  text-transform: uppercase; 
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  letter-spacing: 0.125rem;
+  border-style: hidden;
+}
+
+.dashboard-button{
+  width: 7rem;
+  height: 2.5rem;
+  position: relative;
+  right: 28rem;
+  background-color: black;
+  border-radius: 0.625rem;
+  color:white;
+  text-transform: uppercase; 
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  letter-spacing: 0.125rem;
+  border-style: hidden;
+}
+
+.redirectPrediction {
+  background-color: #E9D3D0;
+  width: 18rem;
+  height: 13rem;
+  color: white;
+  text-transform: uppercase; 
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  letter-spacing: 0.125rem;
+  border-radius:  0.625rem;
+}
+
+/*this is for the user dashboard columns*/
+.container {
+  display: flex;
+  justify-content: center; /* Distribute columns evenly */
+  align-items: center; /* Center vertically */
+  height: 100vh; 
+}
+
+.passUpdate {
+  background-color: #E9D3D0;
+  width: 18rem;
+  height: 13rem;
+  color: white;
+  text-transform: uppercase; 
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  letter-spacing: 0.125rem;
+  border-radius:  0.625rem;
+  border-style: hidden;
+}
+
+.submitBtn {
+  background-color: #DF5C93;
+  color: white;
+  text-transform: uppercase; 
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  border-radius:  0.625rem;
+  border-style: hidden;
+  align-items: center;
+}
+
+.formUserDash {
+  border-style: hidden;
+}
+
+@media screen and (max-width: 560px) {
+  .logIn-button {
+    max-width: 5rem; 
+    max-height: 2.5rem;
+    right: 0%;
+  }
+}
+@media screen and (max-width: 1140px) {
+  .dashboard-button {
+   display: none;
+  }
+}
+
+.carousel-item {
+  max-width: 100%;
+  max-height: 80vh;
+}
+
+#mission-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#mission-statement-div {
+   width: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: flex-start;
+   flex-direction: column;
+   background-color: whitesmoke;
+   padding: 5%;
+   font-size:large;
+   font-family: 'Saira Condensed';
+   text-align: center;
+   letter-spacing: 0.125rem;
+}
+
+#mission-image-div {
+  padding: 3%;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+#mission-image {
+max-width: 75%;
+max-height: auto;
+}
+
+.register-btn {
+  text-transform: uppercase;
+  color: white;
+}
+
+@media screen and (max-width: 560px) {
+  .logIn-button {
+    max-width: 6rem; 
+    max-height: 3rem;
+    right: 0%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .logo-image {
+    max-width: 12rem;
+    max-height: 9rem;
+  }
+  }
+
+@media only screen and (max-width: 430px) {
+  .logo-image {
+    max-width: 10rem;
+  }
+  }
+  @media only screen and (max-width: 575px) {
+    .passUpdate {
+   margin-bottom: 3rem;
+    }
+  }
+
+.custom-padding {
+padding-top: 3rem;
+flex-wrap: wrap;
+}
+
+.custom-padding1 {
+padding-bottom: 3rem;
+flex-wrap: wrap;
+}
+
+.uploadButton{
+margin-top: 1rem;
+background-color: #DF5C93;
+color: white;
+text-transform: uppercase; 
+font-size: medium;
+font-family: 'Saira Condensed';
+border-radius:  0.625rem;
+border-style: hidden; 
+}
+
+.uploadedPic{
+background-color: white;
+width: 20rem;
+height: 10rem;
+color: black;
+text-transform: uppercase; 
+text-align: justify;
+font-size: medium;
+font-family: 'Saira Condensed';
+letter-spacing: 0.125rem;
+border-radius:  0.625rem;
+border-style: hidden;
+padding-left: 3rem;
+}
+
+
+
+.predicButton{
+  margin-top: 1rem;
+  background-color: #DF5C93;
+  color: white;
+  text-transform: uppercase; 
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  border-radius:  0.625rem;
+  border-style: hidden; 
+  width: 15rem;
+  }
+
+.hr{
+color: black;
+}
+
+.explainableAI{
+background-color: white;
+width: 25rem;
+height: 10rem;
+color: black;
+text-transform: uppercase; 
+text-align: center;
+font-size: medium;
+font-family: 'Saira Condensed';
+letter-spacing: 0.125rem;
+border-style: hidden;
+border-radius:  0.625rem;
+}
+
+.uploadCard{
+background-color: white;
+width: 20rem;
+height: 10rem;
+color: white;
+text-transform: uppercase; 
+font-size: medium;
+font-family: 'Saira Condensed';
+letter-spacing: 0.125rem;
+border-style: hidden;
+border-radius:  0.625rem;
+padding-top: 2.5rem;
+
+}
+
+.text {
+text-transform: uppercase; 
+font-size: medium;
+font-family: 'Saira Condensed';
+font-weight: bolder;
+}
+
+.gap{
+  margin-bottom: 3rem;
+  gap: 10rem;
+}
+
+.predtext {
+  text-transform: uppercase; 
+  font-size: large;
+  font-family: 'Saira Condensed';
+  }
+
+#predictionResult{
+  text-transform: uppercase; 
+  font-size: x-large;
+  font-family: 'Helvetica';
+  font-weight: bolder;
+}

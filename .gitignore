@@ -1,0 +1,10 @@
+## Ignore pycache as it is generated each run through of app
+__pycache__/
+*.py[cod]
+.DS_Store
+
+## jupyter notebook checkpoints
+.ipynb_checkpoints
+## Ml model logs
+logs/ 
+kaggle_image_data/

@@ -1,0 +1,54 @@
+.retrain_btn{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+#trainBtn {
+    width: 10%
+}
+
+.retrain-allmodels{
+    display: flex;
+    flex-direction: row;
+    gap: 12rem;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.retrain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 2rem;
+}
+
+.tables {
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    width: 14rem;
+  }
+
+.form-label, .form-control, .uploadButton {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-control {
+    font-size: 12px;
+    padding: 4px;
+}

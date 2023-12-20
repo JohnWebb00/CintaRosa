@@ -1,0 +1,52 @@
+stages:
+  - build
+  - deploy
+
+build_image:
+  image: docker
+  tags: [docker-build]
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - cd $CI_PROJECT_DIR/projectOne
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest .
+    - docker push registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest
+    - echo "Image built"
+  after_script:
+    #strip image
+    - docker rmi --force registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest
+
+deploy_image:
+  image: google/cloud-sdk
+  stage: deploy
+  tags: [docker-build]
+  services:
+    - docker:dind
+  rules:
+    - if: $CI_COMMIT_TAG  # Run this job when a tag is created
+  variables:
+    KUBE_CONTEXT: courses/dit826/2023/group1/k8s-connection:my-k8-agent
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    # Start connection to K8 Agent
+    - echo "running connection to K8 Agent"
+    - source /root/.bashrc
+    - kubectl config use-context $KUBE_CONTEXT
+
+    - kubectl get pods
+    - echo "Deployment CINTA-ROSA-APP to K8S"
+    - ls $CI_PROJECT_DIR/k8s-files
+
+    # Delete pods in namespace
+    - kubectl delete pods -l app=cinta-rosa-app
+    # Apply manifest to the node
+    - kubectl apply -f $CI_PROJECT_DIR/k8s-files/.
+    # Check pod is active and running with image
+    - kubectl get pods
+    # Get node IP addresses
+    - kubectl get nodes -o wide | awk -v OFS='\t\t' '{print $7}'
+    # Get port to access the application from
+    - kubectl get svc 

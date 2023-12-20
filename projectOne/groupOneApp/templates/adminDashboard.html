@@ -1,0 +1,281 @@
+{% extends 'base.html' %} {% block title %}
+<h1>Admin Dashboard</h1>
+{% endblock %} {% block content %}
+<div class="retrain_btn">
+  <label>Retrain model</label>
+  <button id="trainBtn" class="btn btn-light uploadButton">Do it</button>
+  <div id="retraining" style="display: none">
+    <label>Model is being retrained....</label>
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>
+<div class="retrain-allmodels">
+  <div class="retrain">
+    <div class="card-body">
+      {% csrf_token %}
+      <input
+        type="file"
+        class="form-control"
+        id="benignCustomFile"
+        accept=".zip, .png, .jpg, .jpeg"
+      />
+      <button
+        type="button"
+        id="uploadBenignButton"
+        class="btn btn-light uploadButton"
+      >
+        Upload Benign
+      </button>
+    </div>
+
+    <div class="card-body">
+      {% csrf_token %}
+      <input
+        type="file"
+        class="form-control"
+        id="normalCustomFile"
+        accept=".zip, .png, .jpg, .jpeg"
+      />
+      <button
+        type="button"
+        id="uploadNormalButton"
+        class="btn btn-light uploadButton"
+      >
+        Upload Normal
+      </button>
+    </div>
+
+    <div class="card-body">
+      {% csrf_token %}
+      <input
+        type="file"
+        class="form-control"
+        id="malignantCustomFile"
+        accept=".zip, .png, .jpg, .jpeg"
+      />
+      <button
+        type="button"
+        id="uploadMalignantButton"
+        class="btn btn-light uploadButton"
+      >
+        Upload Malignant
+      </button>
+    </div>
+  </div>
+  <div class="tables">
+    <h2>Table of models</h2>
+    {% if currentModel %}
+    <label
+      >Current model is
+      <b>{{currentModel.modelpath|cut:"cnnModel/models/"}}</b></label
+    >
+    {% else %}
+    <label>Current model is <b>NONE</b></label>
+    {% endif %}
+    <form id="changeModelForm">
+      {% csrf_token %}
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        id="selectModel"
+      >
+        <option selected>Select a model</option>
+        {% for model in modelList%}
+        <option value="{{model.ml_model_id}}">{{model.modelpath|cut:"cnnModel/models/"}}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-dark">Change active model</button>
+    </form>
+    {% if modelList.count > 0 %} {% for model in modelList%}
+    <div
+      class="card"
+      style="width: 25rem; padding: 4%"
+      id="chooseModel"
+      name="{{model.ml_model_id}}"
+    >
+      <div class>
+        <h5>{{model.modelpath|cut:"cnnModel/models/"}}</h5>
+        <h6>Model id: {{model.ml_model_id}}</h6>
+        <ul>
+          <li><b>Training Accuracy: </b>{{model.train_accuracy}}</li>
+          <li><b>Validation Accuracy: </b>{{model.accuracy}}</li>
+          <li><b>Test Accuracy: </b>{{model.test_accuracy}}</li>
+          <li><b>Date created: </b>{{model.date_created}}</li>
+          {% if model.currentlyUsed %}
+          <li>
+            <b>Currently in use: </b
+            ><span style="color: green">{{model.currentlyUsed}}</span>
+          </li>
+          {% else %}
+          <li>
+            <b>Currently in use: </b
+            ><span style="color: red">{{model.currentlyUsed}}</span>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      <img src="{{model.snsheatmap.url}}" class="card-img-bottom" alt="..." />
+    </div>
+    {% endfor %} {% else %}
+    <label>No ML models currently saved</label>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      var cookies = document.cookie.split(";");
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  $(document).ready(function () {
+    $("#trainBtn").click(function () {
+      alert("Model will be retrained... PRESS 'OK' to start retraining");
+      $("#trainBtn").attr("disabled", true);
+      $("#retraining").show();
+      $.ajax({
+        url: "/retrainModel/",
+        type: "get",
+        body: {},
+        success: function (response) {
+          alert("The model has been retrained!");
+          $("#trainBtn").attr("disabled", false);
+          $("#retraining").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Error: " + errorThrown + ". Please Try Again Later!");
+        },
+      });
+    });
+  });
+
+  const csrftoken = getCookie("csrftoken");
+  $(document).ready(function () {
+    $("#uploadBenignButton").click(function () {
+      var benignImg = document.querySelector('#benignCustomFile');
+
+      // Check if a file has been chosen
+      if (benignImg.files.length === 0) {
+        alert("Please choose a file before uploading.");
+        return;
+      }
+
+      var formData = new FormData();
+      formData.append("benignFile", benignImg.files[0]);
+
+      $.ajax({
+        url: "/uploadBenign/",
+        type: "post",
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function (response) {
+          alert("The image(s) has successfully been uploaded!");
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Error: " + errorThrown + ". Please Try Again Later!");
+        },
+      });
+    });
+  });
+
+  $(document).ready(function () {
+    $("#uploadMalignantButton").click(function () {
+      var malignantImg = document.querySelector('#malignantCustomFile');
+
+      // Check if a file has been chosen
+      if (malignantImg.files.length === 0) {
+        alert("Please choose a file before uploading.");
+        return;
+      }
+
+      var formData = new FormData();
+      formData.append('malignantFile', malignantImg.files[0]);
+
+      $.ajax({
+        url: "/uploadMalignant/",
+        type: "post",
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function (response) {
+          alert("The image(s) has successfully been uploaded!");
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Error: " + errorThrown + ". Please Try Again Later!");
+        },
+      });
+    });
+  });
+
+  $(document).ready(function () {
+    $("#uploadNormalButton").click(function () {
+      var normalImg = document.querySelector('#normalCustomFile');
+
+      // Check if a file has been chosen
+      if (normalImg.files.length === 0) {
+        alert("Please choose a file before uploading.");
+        return;
+      }
+
+      var formData = new FormData();
+      formData.append('normalFile', normalImg.files[0]);
+      $.ajax({
+        url: "/uploadNormal/",
+        type: "post",
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function (response) {
+          alert("The image(s) has successfully been uploaded!");
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Error: " + errorThrown + ". Please Try Again Later!");
+        },
+      });
+    });
+  });
+
+  var selectedModel = $("#changeModelForm");
+  selectedModel.submit(function () {
+    var chosenModel = $("#selectModel").find(":selected").val();
+    console.log(chosenModel);
+    $.ajax({
+      url: "/selectActiveModel/",
+      type: "post",
+      data: {
+        modelFullName: chosenModel,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function (data) {
+        alert("New Model has been selected globally!");
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        // errors usually have alot to do with validation
+        alert("Error: " + errorThrown + ". Please Try Again Later!");
+      },
+    });
+  });
+</script>
+{% endblock %} 1,2,3,4,5 onclick of 1 0== set model with id 1

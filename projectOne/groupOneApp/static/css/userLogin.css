@@ -1,0 +1,62 @@
+.login-register-box{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8rem;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+#login{
+    gap:1rem
+}
+
+#register{
+    align-self: center;
+}
+
+.formbox{
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+}
+
+#login-card{
+    display: flex;
+    height: 17rem;
+    width: 22rem;
+    padding: 2rem;
+    justify-content: center;
+}
+#register-card{
+    display: flex;
+    height: 22rem;
+    width: 36rem;
+    padding: 1.25rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.the-line {
+    margin-top: 17rem;
+    border-left: 0.5px solid gray;
+    height: 20rem;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+}
+
+@media (max-width: 832px) {
+    .the-line {
+        display: none;
+    }
+}
+
+@media (max-width: 1040px) {
+    .login-register-box {
+        gap: 4rem;
+    }
+}
