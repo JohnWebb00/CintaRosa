@@ -15,6 +15,11 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropou
 import shutil
 from django.conf import settings
 
+# Explainable AI
+import lime
+from lime import lime_image
+from PIL import Image 
+
 # enable heatmap plotting by running matplot on separate thread instead of main
 matplotlib.use('agg')
 
@@ -66,43 +71,6 @@ class BreastCancerModelDetection(models.Model):
         final = np.expand_dims((resized / 255), 0)
 
         return final
-
-
-    @staticmethod
-    def images_to_csv(input_directory, output_csv_path):
-        write_header = not os.path.exists(output_csv_path)
-
-        # Open the CSV file in append mode
-        with open(output_csv_path, 'a', newline='') as csv_file:
-            csv_writer = csv.writer(csv_file)
-
-            if write_header:
-                header_row = ['Label'] + [f'P-{i}' for i in range(256 * 256)]
-                csv_writer.writerow(header_row)
-
-            # Process each image in the input directory
-            for filename in os.listdir(input_directory):
-                if filename.endswith('.png') or filename.endswith('.jpg') or filename.endswith('.jpeg'):
-                    image_path = join(input_directory, filename)
-
-                    img_array = BreastCancerModelDetection.to_numpy(image_path)
-
-                    # Reshape the 2D array into a 1D array
-                    flattened_array = img_array.flatten()
-
-                    if "malignant" in filename:
-                        label = 1
-                    elif "benign" in filename:
-                        label = 0
-                    elif "normal" in filename:
-                        label = 2
-                    else:
-                        label = -1  # Placeholder for other labels
-
-                    # Write it to the CSV file
-                    csv_writer.writerow([label] + list(flattened_array))
-
-        print(f"Images in '{input_directory}' have been converted and appended to the CSV file '{output_csv_path}'.")
 
 
     @staticmethod
@@ -181,13 +149,13 @@ class BreastCancerModelDetection(models.Model):
      
         train_data, validation_data, test_data = BreastCancerModelDetection.prepare_image_data(dataPath)
         
-        train_batch_size = 10
-        train_epochs = 12
+        curr_batch_size = 16
+        train_epochs = 10
         # Create TensorBoard callback for logging
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs")
         # Train on the training and validation set
-        BreastCancerModelDetection.history_train = BreastCancerModelDetection.model.fit(train_data, batch_size=train_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
-        BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=train_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
+        BreastCancerModelDetection.history_train = BreastCancerModelDetection.model.fit(train_data, batch_size=curr_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
+        BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=curr_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
 
         # Checks current version then returns with new version
         new_version = BreastCancerModelDetection.checkCurrVersion()
@@ -201,18 +169,18 @@ class BreastCancerModelDetection(models.Model):
         # evaluate the model
         BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
         
-        # Find labels of test data for confusion matrix creation
-        y_test = np.concatenate([y for x, y in test_data], axis=0)
-        
-        # create predicted classes which represents a set of predictions and their labels
-        predicted_classes = BreastCancerModelDetection.model.predict(test_data, verbose='auto', batch_size=train_batch_size) #length 25, due to only needing to predict 25 images
-        predicted_classes = np.argmax(predicted_classes, axis=1)
+        # Find labels of validation data for confusion matrix creation
+        y_labels = np.concatenate([y for x, y in test_data], axis=0)
+    
+        # Find predicted classes to compare with actual labels
+        predictions = BreastCancerModelDetection.model.predict(test_data)
+        pred_classes = np.argmax(predictions, axis=1)
         
         # Create confusion matrix based on the predicted classes and their actual values
-        conf_matrix = confusion_matrix(y_test, predicted_classes)
+        conf_matrix = confusion_matrix(y_labels, pred_classes)
         
         # Plot heat map based on the confusion matrix
-        heatmap = sns.heatmap(conf_matrix, annot=True)
+        heatmap = sns.heatmap(conf_matrix, annot=True, fmt='g', xticklabels=['Benign', 'Malignant', 'Normal'], yticklabels=['Benign', 'Malignant', 'Normal'])
         fig = heatmap.get_figure()
         
         # Create heatmap folder
@@ -227,6 +195,8 @@ class BreastCancerModelDetection(models.Model):
         # Create Model Image (only for backend NOT to be returned)
         plot_name = os.path.join("model_plot", f'model_{new_version}.png')
         dot_img_file = os.path.join("cnnModel", plot_name)
+        
+        os.makedirs(os.path.join("cnnModel", "model_plot"), exist_ok=True)
         tf.keras.utils.plot_model(BreastCancerModelDetection.model, to_file=dot_img_file, show_shapes=True)
         
         test_acc = BreastCancerModelDetection.history_test.pop()
@@ -253,8 +223,35 @@ class BreastCancerModelDetection(models.Model):
                
                 predicted_class = np.argmax(prediction_arr)
                 
+                # Create lime explainer
+                explainer = lime_image.LimeImageExplainer(random_state=42)
+                
+                # configure image to work with explainer
+                
+                # image = im.open(pathOfImg)
+                # new_image = image.resize((256, 256))
+                new_image = Image.fromarray(prediction_arr)
+                
+                # Explain image instance with original image and the model prediction function
+                
+                ##### Gives attributeError: shape meaning that shape deosnt exist on PIL image....
+                explanation = explainer.explain_instance(
+                                new_image, 
+                                BreastCancerModelDetection.model.predict,top_labels=2)
+
+                # Return original image and mask from the predicited class
+                image, mask = explanation.get_image_and_mask(predicted_class, positives_only=True,
+                                            hide_rest=True)
+                
+                # Add mask and image as one concatenated image
+                finalImageArr = np.concatenate((image, mask), axis=1)
+                finalImage = Image.fromarray(finalImageArr)
+                
+                #finalImage = ''
+                print(predicted_class)
+                
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img
-                return predicted_class
+                return predicted_class, finalImage
             except FileNotFoundError:
                 print(f"File not found at {pathOfImg}")
                 
