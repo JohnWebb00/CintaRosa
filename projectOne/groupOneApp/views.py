@@ -38,8 +38,7 @@ if(isCurrentlyUsed is not None):
     #set the model version number to the id of the active model
     model.versionInt = isCurrentlyUsed.ml_model_id
 else:
-    print("Model has not been trained, please train the model")
-        
+    print("No model is currently selected for use")
 
 # Once model version number is updated by fetching the currentlyUsed model from db
 # We create the model again by the specified model version
@@ -482,7 +481,7 @@ def handle_uploaded_image(request):
         predictiondata.beforeTimestamp = datetime.datetime.now() # gets current time before prediction
  
         # Use model.predict function of the CNN model and store the result
-        result, xaiPict = model.predict(image_dir)
+        result = model.predict(image_dir)
 
         # Result gets saved in the database
         predictiondata.result = result
@@ -509,8 +508,7 @@ def handle_uploaded_image(request):
     context = {
         'current': 'predictionPage',
         'predictionResult': predictionText, 
-        'userId': request.POST['userId'],
-        'xaiPicture': xaiPict
+        'userId': request.POST['userId']
     }
 
     response = JsonResponse(context)

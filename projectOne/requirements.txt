@@ -19,6 +19,3 @@ eli5
 pydot
 tensorflow
 opencv-python
-
-# Explainable AI
-lime
