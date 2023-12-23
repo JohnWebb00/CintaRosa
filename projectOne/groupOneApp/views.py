@@ -25,6 +25,7 @@ from django.http import JsonResponse
 import re
 from django.utils import timezone
 
+
 # Create gloabl model and load current h5 weights on model
 model = BreastCancerModelDetection()
 
@@ -283,7 +284,8 @@ def uploadImage(request):
     except Exception as e:
         # Handle the exception, e.g., log the error or return an error response.
         return HttpResponseServerError("Error processing image")
-    
+
+#TODO check return statement   
 def trainModelNew(request):
     # Retrain model, saving h5 file returning the accuracy
     train_res, test_res, val_res, modelPath, snsHeatmap = model.train_breast_cancer_model_detection()
