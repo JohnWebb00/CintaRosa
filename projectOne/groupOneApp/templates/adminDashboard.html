@@ -1,18 +1,40 @@
-{% extends 'base.html' %} {% block title %}
-<h1>Admin Dashboard</h1>
-{% endblock %} {% block content %}
-<div class="retrain_btn">
-  <label>Retrain model</label>
-  <button id="trainBtn" class="btn btn-light uploadButton">Do it</button>
-  <div id="retraining" style="display: none">
-    <label>Model is being retrained....</label>
-    <div class="spinner-border text-success" role="status">
-      <span class="visually-hidden">Loading...</span>
+{% extends 'base.html' %} {% block content %}
+{% comment %} <div class="retrain-div">
+  <div class="retrain-btn">
+    <label>Retrain model</label>
+    <button id="trainBtn" class="btn btn-light uploadButton">Do it</button>
+    <div id="retraining" style="display: none">
+      <label>Model is being retrained....</label>
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
   </div>
-</div>
+  <div>
+    {% if currentModel %}
+    <label
+      >Current model is
+      <b>{{currentModel.modelpath|cut:"cnnModel/models/"}}</b></label
+    >
+    {% else %}
+    <label>Current model is <b>NONE</b></label>
+    {% endif %}
+  </div>
+</div> {% endcomment %}
 <div class="retrain-allmodels">
   <div class="retrain">
+    <div class="retrain-body">
+      <div class="retrain-btn">
+        <label>Retrain model</label>
+        <button id="trainBtn" class="btn btn-light uploadButton">Do it</button>
+      </div>
+      <div id="retraining" style="display: none">
+        <label>Model is being retrained....</label>
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
     <div class="card-body">
       {% csrf_token %}
       <input
@@ -65,28 +87,32 @@
     </div>
   </div>
   <div class="tables">
-    <h2>Table of models</h2>
-    {% if currentModel %}
-    <label
-      >Current model is
-      <b>{{currentModel.modelpath|cut:"cnnModel/models/"}}</b></label
-    >
-    {% else %}
-    <label>Current model is <b>NONE</b></label>
-    {% endif %}
+    <div class="curr_model_text">
+      {% if currentModel %}
+      <label
+        >Current model is
+        <b>{{currentModel.modelpath|cut:"cnnModel/models/"}}</b></label
+      >
+      {% else %}
+      <label>Current model is <b>NONE</b></label>
+      {% endif %}
+    </div>
     <form id="changeModelForm">
       {% csrf_token %}
-      <select
-        class="form-select"
-        aria-label="Default select example"
-        id="selectModel"
-      >
-        <option selected>Select a model</option>
-        {% for model in modelList%}
-        <option value="{{model.ml_model_id}}">{{model.modelpath|cut:"cnnModel/models/"}}</option>
-        {% endfor %}
-      </select>
-      <button type="submit" class="btn btn-dark">Change active model</button>
+      <h2>Table of models</h2>
+      <div style="display: flex; flex-direction: row; gap: 1rem; height: 2.25rem; width: 24rem;">
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          id="selectModel"
+        >
+          <option selected>Select a model</option>
+          {% for model in modelList%}
+          <option value="{{model.ml_model_id}}">{{model.modelpath|cut:"cnnModel/models/"}}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-dark">Change</button>
+      </div>
     </form>
     {% if modelList.count > 0 %} {% for model in modelList%}
     <div
@@ -156,6 +182,8 @@
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
           alert("Error: " + errorThrown + ". Please Try Again Later!");
+          $("#trainBtn").attr("disabled", false);
+          $("#retraining").hide();
         },
       });
     });

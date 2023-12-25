@@ -18,7 +18,6 @@ body{
 
 .logo-image {
   padding-left: 30%;
-  width: 35rem;
   height: 5rem; 
   margin-bottom: auto;
   margin-top: 2.5%;
@@ -40,8 +39,8 @@ footer {
 .logIn-button{
   width: 6rem;
   height: 2.5rem;
-  position: relative;
-  right: 20%;
+  /* position: relative; */
+  margin-right: 10rem;
   background-color: black;
   border-radius: 0.625rem;
   color:white;
@@ -55,7 +54,7 @@ footer {
 .dashboard-button{
   width: 7rem;
   height: 2.5rem;
-  position: relative;
+  /* position: relative; */
   right: 28rem;
   background-color: black;
   border-radius: 0.625rem;
@@ -65,6 +64,19 @@ footer {
   font-family: 'Saira Condensed';
   letter-spacing: 0.125rem;
   border-style: hidden;
+}
+
+#dash-and-logout-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 3rem;
+  padding-right: 10rem;
+}
+
+.admin-spanner {
+  padding-right: 2rem;
 }
 
 .redirectPrediction {
@@ -175,27 +187,37 @@ max-height: auto;
   .logIn-button {
     max-width: 6rem; 
     max-height: 3rem;
-    right: 0%;
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 888px) {
   .logo-image {
-    max-width: 12rem;
-    max-height: 9rem;
-  }
+    max-width: 8rem;
+    content: url(images/logoIcon.png);
   }
 
-@media only screen and (max-width: 430px) {
-  .logo-image {
-    max-width: 10rem;
+  #mission-image-div {
+    display: none;
   }
+
+  #mission-statement-div {
+    width: 100%;
   }
-  @media only screen and (max-width: 575px) {
-    .passUpdate {
-   margin-bottom: 3rem;
-    }
+
+  #dash-and-logout-btns {
+    padding-right: 2rem;
   }
+
+  .logIn-button {
+    margin-right: 4rem;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .passUpdate {
+    margin-bottom: 3rem;
+  }
+}
 
 .custom-padding {
 padding-top: 3rem;
