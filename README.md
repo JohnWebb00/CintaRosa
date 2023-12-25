@@ -44,9 +44,6 @@ Use the built-in continuous integration in GitLab.
 
 ***
 
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
 
 # CINTA ROSA <img src="screenshots/breast-cancer-awareness.png" alt="Image" width="40"/>
@@ -186,8 +183,13 @@ The project primarily comprises two components: cnnModel, responsible for design
 In the image provided, you will discover our database design, illustrating the relationships between entities. This offers a comprehensive overview of the project.
 ![DB](screenshots/db.png)
 
-
-
+# Deployment
+### **Google cloud setup**
+tbd
+### **Google cloud deployment structure**
+tbd
+### **How deployments are updated**
+tbd
 # Support
 If you have any technical or general questions, suggestions, or concerns about the project, feel free to contact the project developers via email.
 - AGATA CIUCHTA - gusciuag@student.gu.se
