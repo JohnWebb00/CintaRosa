@@ -172,23 +172,31 @@ class BreastCancerModelDetection(models.Model):
     @staticmethod
     def train_breast_cancer_model_detection():
         if BreastCancerModelDetection.model is None:
-            raise ValueError("Model has not been initialized.")
+            # creates model but doesnt load weights as none exist yet
+            BreastCancerModelDetection.createModel()
         
         print("Model retraining started in backend")
         
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
         dataPath = str(data_OSPath)
      
+        # Create train, validation and test sets from the image data stored locally
         train_data, validation_data, test_data = BreastCancerModelDetection.prepare_image_data(dataPath)
         
+        # Define batch sizes and epochs
         train_batch_size = 10
         train_epochs = 12
+        
         # Create TensorBoard callback for logging
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs")
+        
         # Train on the training and validation set
         BreastCancerModelDetection.history_train = BreastCancerModelDetection.model.fit(train_data, batch_size=train_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
         BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=train_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
 
+        # evaluate the model
+        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
+        
         # Checks current version then returns with new version
         new_version = BreastCancerModelDetection.checkCurrVersion()
         
@@ -197,9 +205,6 @@ class BreastCancerModelDetection(models.Model):
         
         # save weights to folder
         BreastCancerModelDetection.model.save(finalPath)
-
-        # evaluate the model
-        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
         
         # Find labels of test data for confusion matrix creation
         y_test = np.concatenate([y for x, y in test_data], axis=0)
