@@ -1,3 +1,11 @@
+"""
+Authors:
+- bardiaf - ??
+- ...
+
+Usage: None
+"""
+
 import keras
 import os
 import cv2

@@ -3,6 +3,13 @@
 
 # In[45]:
 
+"""
+Authors:
+- bardiaf - ??
+- ...
+
+Usage: None
+"""
 
 import keras
 import os

@@ -1,3 +1,11 @@
+"""
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+- sejal - ??
+
+Usage: groupOneApp/views.py
+"""
+
 from .models import Prediction
 from django import forms
 

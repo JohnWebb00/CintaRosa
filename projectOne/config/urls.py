@@ -1,4 +1,12 @@
 """
+Authors:
+- sejal - ???
+-??????
+
+Usage: Settings throughout entire project
+
+-------------------------------------------------------
+
 URL configuration for projectOne project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:

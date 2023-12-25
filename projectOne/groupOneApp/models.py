@@ -1,3 +1,12 @@
+"""
+Authors:
+- ciuchta - ??
+- sejal - ??
+- zsolnai - georg.zsolnai123@gmail.com
+
+Usage: groupOneApp/views.py, groupOneApp/serializers.py, groupOneApp/utils.py
+"""
+
 from datetime import *
 from distutils.command import upload
 from django.db import models

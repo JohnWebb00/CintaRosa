@@ -1,3 +1,13 @@
+"""
+Authors:
+- ciuchta - ??
+- sejal - ??
+- zsolnai - georg.zsolnai123@gmail.com
+- ????
+
+Usage: config/urls.py
+"""
+
 from django.urls import path, include
 from . import views 
 from django.conf import settings

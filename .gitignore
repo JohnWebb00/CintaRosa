@@ -1,3 +1,9 @@
+### Authors:
+
+# - zsolnai - georg.zsolnai123@gmail.com
+
+### Usage: project repository
+
 ## Ignore pycache as it is generated each run through of app
 __pycache__/
 *.py[cod]

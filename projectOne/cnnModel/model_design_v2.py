@@ -3,6 +3,14 @@
 
 # In[417]:
 
+"""
+Authors:
+- bardiaf - ??
+- ...
+
+Usage: None
+"""
+
 
 import keras
 import os

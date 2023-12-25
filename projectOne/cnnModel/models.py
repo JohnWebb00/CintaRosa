@@ -1,3 +1,12 @@
+"""
+Authors:
+- bardiaf - ??
+- zsolnai - georg.zsolnai123@gmail.com
+- sejal - ??
+
+Usage: groupOneApp/views.py
+"""
+
 from django.db import models
 import numpy as np
 import pandas as pd

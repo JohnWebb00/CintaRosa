@@ -1,3 +1,9 @@
+## Authors:
+# - johnchri - ??
+# - zsolnai - georg.zsolnai123@gmail.com
+
+## Usage: .gitlab-ci.yml
+
 FROM python:3.11-slim-bookworm
 EXPOSE 8000
 ENV PYTHONUNBUFFERED=1

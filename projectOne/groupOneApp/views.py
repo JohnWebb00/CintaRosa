@@ -1,3 +1,15 @@
+"""
+Authors:
+- ciuchta - ??
+- sejal - ??
+- zsolnai - georg.zsolnai123@gmail.com
+- johnchri - ??
+- ?????
+
+Usage: groupOneApp/urls.py
+"""
+
+
 import datetime
 import os
 import tempfile

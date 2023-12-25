@@ -1,3 +1,11 @@
+/* 
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+
+Usage: groupOneApp/templates/userLogin.html
+*/
+
+
 .login-register-box{
     display: flex;
     flex-wrap: wrap;

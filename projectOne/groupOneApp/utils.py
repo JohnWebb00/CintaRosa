@@ -1,3 +1,11 @@
+"""
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+- ???
+
+Usage: groupOneApp/views.py
+"""
+
 # This is the response that we will return
 from rest_framework.response import Response
 # This is the model that we will use
