@@ -65,6 +65,8 @@ The primary purpose of our project is to contribute to the early detection of br
 
 # Getting Started
 
+### **For Developers**
+
 ### **Installation**
 1. Go to https://git.chalmers.se/courses/dit826/2023/group1/dit826-group1
 2. Clone the project into a directory of your choosing using either SSH or HTTPS
@@ -161,11 +163,12 @@ If you're using Django, perform the database migrations:
 ![predictionPage](screenshots/prediction-page.png)
 4. On the user dashboard page, you can view the upload history of your images, including associated date and corresponding results
 ![userDashboard](screenshots/user-dashboard.png)
+![userDashboardPrediction](screenshots/user-dashboard-predictions.png)
 Clicking on the pink box on the left side of the page will navigate you to the prediction page, allowing you to upload additional images
 
 #### How to use the website (For administrators)
 On the admin dashboard page, administrators have three options that contribute to model retraining, ultimately enhancing model accuracy
-![adminDashboard](admin-dashboard.png)
+![adminDashboard](screenshots/admin-dashboard.png)
 
 1. **Upload image(s):** On the left side, you have the option to upload images. Images can be uploaded either in batches or as individual files. If you choose to upload a batch of images, they should be in the form of zip files. For single-image uploads, ensure the image is in the PNG file format
 
@@ -175,20 +178,17 @@ On the admin dashboard page, administrators have three options that contribute t
 
 3. **Table of models:** You can explore various models and select one based on your preference, also viewing each model's accuracy.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+# Project Structure (For Developers)
+### Directory Layout
+The project primarily comprises two components: cnnModel, responsible for designing the model and handling training and prediction, and groupOneApp, where the database structure, frontend, and backend of the website are defined.
+![directoryStructure](screenshots/directory-structure.png)
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Database Structure
+In the image provided, you will discover our database design, illustrating the relationships between entities. This offers a comprehensive overview of the project.
+![DB](screenshots/db.png)
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
 ## Support
 Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
