@@ -50,6 +50,32 @@ Use the built-in continuous integration in GitLab.
 
 Revolutionary breast cancer detection online.
 
+# Table of Contents
+- [Introduction](#introduction)
+  - [Project Overview](#project-overview)
+  - [Purpose and Goals](#purpose-and-goals)
+
+- [Getting Started](#getting-started)
+  - [For Developers](#for-developers)
+    - [Installation](#installation)
+    - [System Requirements](#system-requirements)
+    - [Dependencies](#dependencies)
+  - [For Users](#for-users)
+    - [How to use the website (For regular users)](#how-to-use-the-website-for-regular-users)
+    - [How to use the website (For administrators)](#how-to-use-the-website-for-administrators)
+
+- [Project Structure (For Developers)](#project-structure-for-developers)
+  - [Directory Layout](#directory-layout)
+  - [Database Structure](#database-structure)
+
+- [Deployment](#deployment)
+  - [Google Cloud Setup](#google-cloud-setup)
+  - [Google Cloud Deployment Structure](#google-cloud-deployment-structure)
+  - [How Deployments Are Updated](#how-deployments-are-updated)
+
+- [Support](#support)
+
+- [License](#license)
 
 # Introduction
 ### **Project Overview** 
