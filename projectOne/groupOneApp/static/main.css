@@ -39,8 +39,7 @@ footer {
 .logIn-button{
   width: 6rem;
   height: 2.5rem;
-  /* position: relative; */
-  margin-right: 10rem;
+  margin-right: 5rem;
   background-color: black;
   border-radius: 0.625rem;
   color:white;
@@ -54,8 +53,6 @@ footer {
 .dashboard-button{
   width: 7rem;
   height: 2.5rem;
-  /* position: relative; */
-  right: 28rem;
   background-color: black;
   border-radius: 0.625rem;
   color:white;
@@ -134,7 +131,7 @@ footer {
     right: 0%;
   }
 }
-@media screen and (max-width: 1140px) {
+@media screen and (max-width: 1000px) {
   .dashboard-button {
    display: none;
   }
@@ -211,6 +208,10 @@ max-height: auto;
   .logIn-button {
     margin-right: 4rem;
   }
+
+  .dashboard-button {
+    display: block;
+   }
 }
 
 @media only screen and (max-width: 575px) {
