@@ -228,26 +228,41 @@ class BreastCancerModelDetection(models.Model):
                 
                 # configure image to work with explainer
                 
-                # image = im.open(pathOfImg)
-                # new_image = image.resize((256, 256))
-                new_image = Image.fromarray(prediction_arr)
+                image = tf.keras.preprocessing.image.load_img(pathOfImg, target_size=(256, 256))
+                #img2 = tf.image.rgb_to_grayscale(image)
+                input_arr = tf.keras.preprocessing.image.img_to_array(image)
+                #input_arr = np.array([input_arr])  # Convert single image to a batch.
+                #input_arr = input_arr.astype('float32') / 255.  # This is VERY important
                 
+                print(input_arr.shape) # 1, 256, 256, 1
+                #ValueError: only 2D color images are supported
+
+                
+                # img1 = cv2.imread(pathOfImg)
+                # resized = tf.image.resize(img1, (256, 256))
+                
+                # resized = resized*255
+                # resized = np.array(resized, dtype=np.uint8)
+                # if np.ndim(resized)>3: 
+                #     assert resized.shape[0] == 1
+                #     resized = resized[0]
+                # print(resized.shape ) # 256, 256, 3
                 # Explain image instance with original image and the model prediction function
                 
                 ##### Gives attributeError: shape meaning that shape deosnt exist on PIL image....
                 explanation = explainer.explain_instance(
-                                new_image, 
-                                BreastCancerModelDetection.model.predict,top_labels=2)
+                                input_arr, 
+                                BreastCancerModelDetection.model.predict)
 
                 # Return original image and mask from the predicited class
-                image, mask = explanation.get_image_and_mask(predicted_class, positives_only=True,
-                                            hide_rest=True)
+                image, mask = explanation.get_image_and_mask(predicted_class, 
+                                                            positives_only=True,
+                                                            hide_rest=True)
                 
                 # Add mask and image as one concatenated image
                 finalImageArr = np.concatenate((image, mask), axis=1)
                 finalImage = Image.fromarray(finalImageArr)
-                
-                #finalImage = ''
+                finalImage = ""
                 print(predicted_class)
                 
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img
