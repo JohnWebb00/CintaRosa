@@ -55,7 +55,7 @@ Revolutionary breast cancer detection online.
   - [Project Overview](#project-overview)
   - [Purpose and Goals](#purpose-and-goals)
 
-- [Getting Started](#getting-started)
+- [Project Initiation](#project-initiation)
   - [For Developers](#for-developers)
     - [Installation](#installation)
     - [System Requirements](#system-requirements)
@@ -77,17 +77,24 @@ Revolutionary breast cancer detection online.
 
 - [License](#license)
 
+<a name="introduction"></a>
 # Introduction
+
+<a name="project-overview"></a>
 ### **Project Overview** 
 Our project revolves around the development of a cutting-edge breast cancer detection website. Harnessing the power of Convolutional Neural Networks (CNN), the platform is designed to analyze medical images, specifically those of breast tissue, with the goal of swiftly and accurately identifying potential tumors. This technological innovation has the potential to significantly improve the early detection of breast cancer, offering a valuable tool for individuals alike.
 
+<a name="purpose-and-goals"></a>
 ### **Purpose and Goals**
 The primary purpose of our project is to contribute to the early detection of breast cancer, a crucial factor in improving patient outcomes. By leveraging advanced algorithms, we aim to automate the analysis of breast tumor characteristics, classifying them as malignant, benign, or normal. Our goals include providing a user-friendly platform that simplifies the detection process, ensuring accessibility for the general public. Through this project, we aspire to make a meaningful impact on the efficiency and accuracy of breast cancer diagnosis, ultimately leading to better prognosis and timely medical interventions.
 
-# Getting Started
+<a name="project-initiation"></a>
+# Project Initiation 
 
+<a name="for-developers"></a>
 ### **For Developers**
 
+<a name="installation"></a>
 ### **Installation**
 1. Go to https://git.chalmers.se/courses/dit826/2023/group1/dit826-group1
 2. Clone the project into a directory of your choosing using either SSH or HTTPS
@@ -98,6 +105,7 @@ cd projectOne
 ```bash
 python manage.py runserver
 ```
+<a name="system-requirements"></a>
 ### **System Requirements**
 
 ##### Minimum Requirements
@@ -122,6 +130,7 @@ python manage.py runserver
 - Python 3.8 or higher
 - Docker (optional, for containerized deployment)
 
+<a name="dependencies"></a>
 ### **Dependencies**
 - **Django and Web Framework:**
 
@@ -173,7 +182,11 @@ If you're using Django, perform the database migrations:
    ```
 
 5. Now you're all set! Your environment should be ready to run the project smoothly.
+
+<a name="for-users"></a>
 ### **For Users**
+
+<a name="how-to-use-the-website-for-regular-users"></a>
 #### How to use the website (For regular users)
 
 1. Head over to our website
@@ -187,6 +200,7 @@ If you're using Django, perform the database migrations:
 ![userDashboardPrediction](screenshots/user-dashboard-predictions.png)
 Clicking on the pink box on the left side of the page will navigate you to the prediction page, allowing you to upload additional images
 
+<a name="how-to-use-the-website-for-administrators"></a>
 #### How to use the website (For administrators)
 On the admin dashboard page, administrators have three options that contribute to model retraining, ultimately enhancing model accuracy
 ![adminDashboard](screenshots/admin-dashboard.png)
@@ -199,23 +213,30 @@ On the admin dashboard page, administrators have three options that contribute t
 
 3. **Table of models:** You can explore various models and select one based on your preference, also viewing each model's accuracy.
 
-
+<a name="project-structure-for-developers"></a>
 # Project Structure (For Developers)
 ### Directory Layout
 The project primarily comprises two components: cnnModel, responsible for designing the model and handling training and prediction, and groupOneApp, where the database structure, frontend, and backend of the website are defined.
 ![directoryStructure](screenshots/directory-structure.png)
 
+<a name="database-structure"></a>
 ### Database Structure
 In the image provided, you will discover our database design, illustrating the relationships between entities. This offers a comprehensive overview of the project.
 ![DB](screenshots/db.png)
 
+<a name="deployment"></a>
 # Deployment
+<a name="google-cloud-setup"></a>
 ### **Google cloud setup**
 tbd
+<a name="google-cloud-deployment-structure"></a>
 ### **Google cloud deployment structure**
 tbd
+<a name="how-deployments-are-updated"></a>
 ### **How deployments are updated**
 tbd
+
+<a name="support"></a>
 # Support
 If you have any technical or general questions, suggestions, or concerns about the project, feel free to contact the project developers via email.
 - AGATA CIUCHTA - gusciuag@student.gu.se
@@ -224,5 +245,6 @@ If you have any technical or general questions, suggestions, or concerns about t
 - JOHN CHRISTOPHER WEBB - guswebbjo@student.gu.se
 - SEJAL ULHAS KANASKAR - guskanase@student.gu.se
 
-## License
+<a name="license"></a>
+# License
 For open source projects, say how it is licensed.
