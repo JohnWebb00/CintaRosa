@@ -459,7 +459,6 @@ def handle_uploaded_image(request):
 
     # Get user id and store it into prediction table
     predictiondata.user = User.objects.get(userId = request.POST['userId'])
-    print(predictiondata.user)
 
     if request.method == "POST":  
         if(model.model is None):
@@ -488,7 +487,7 @@ def handle_uploaded_image(request):
         predictiondata.beforeTimestamp = datetime.datetime.now() # gets current time before prediction
  
         # Use model.predict function of the CNN model and store the result
-        result, xaiPict = model.predict(image_dir)
+        result, xaiPict, xaiMask = model.predict(image_dir)
 
         # Result gets saved in the database
         predictiondata.result = result
@@ -516,7 +515,8 @@ def handle_uploaded_image(request):
         'current': 'predictionPage',
         'predictionResult': predictionText, 
         'userId': request.POST['userId'],
-        'xaiPicture': xaiPict
+        'xaiPicture': xaiPict,
+        'xaiMask': xaiMask
     }
 
     response = JsonResponse(context)

@@ -16,9 +16,9 @@ import shutil
 from django.conf import settings
 
 # Explainable AI
-import lime
 from lime import lime_image
 from PIL import Image 
+from matplotlib import cm
 
 # enable heatmap plotting by running matplot on separate thread instead of main
 matplotlib.use('agg')
@@ -29,7 +29,9 @@ MODEL_VERSION_INT = 1
 ## CNNMODEL = attrs: file, accuracy, heatmap, deployed (TRUE FALSE)
 # CNNMODEL.object.filter(deployed=True) --> the current deployed model --> MODEL_VERSION trimmed file path
 
-# Create your models here.
+physical_devices = tf.config.list_physical_devices('GPU') 
+tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
 class BreastCancerModelDetection(models.Model):
 
     model = None # Class variable to store the model
@@ -66,8 +68,8 @@ class BreastCancerModelDetection(models.Model):
         # if the instance is not a path but an actual image
         
         # Turns img to grayscale
-        img2 = tf.image.rgb_to_grayscale(img1)
-        resized = tf.image.resize(img2, (256, 256))
+        # img2 = tf.image.rgb_to_grayscale(img1)
+        resized = tf.image.resize(img1, (256, 256)) 
         final = np.expand_dims((resized / 255), 0)
 
         return final
@@ -77,7 +79,7 @@ class BreastCancerModelDetection(models.Model):
     def prepare_image_data(dataPath):
 
         # Read datasets
-        data = tf.keras.utils.image_dataset_from_directory(dataPath, label_mode='int', color_mode="grayscale")
+        data = tf.keras.utils.image_dataset_from_directory(dataPath, label_mode='int') #, color_mode="grayscale")
         data = data.map(lambda x, y: (x / 255, y))
 
         # calculate train, validation, test size via 70/20/10 split
@@ -100,7 +102,7 @@ class BreastCancerModelDetection(models.Model):
 
         # Convolutional layers
         ## SHould be this dont change
-        BreastCancerModelDetection.model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 1)))
+        BreastCancerModelDetection.model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
         BreastCancerModelDetection.model.add(MaxPooling2D((2, 2)))
         BreastCancerModelDetection.model.add(Dropout(0.25))  # Dropout layer
 
@@ -220,56 +222,35 @@ class BreastCancerModelDetection(models.Model):
             try:
                 #turn img to np.array
                 np_predict = BreastCancerModelDetection.to_numpy(pathOfImg)
-                # predict via the np array
                 
+                # predict via the np array
                 prediction_arr = BreastCancerModelDetection.model.predict(np_predict)
                
+                # Get the predicted class from the prediction (meaning the final class predicted)
                 predicted_class = np.argmax(prediction_arr)
                 
                 # Create lime explainer
                 explainer = lime_image.LimeImageExplainer(random_state=42)
                 
-                # configure image to work with explainer
-                
+                # Resize image and turn it into a numpy array
                 image = tf.keras.preprocessing.image.load_img(pathOfImg, target_size=(256, 256))
-                #img2 = tf.image.rgb_to_grayscale(image)
                 input_arr = tf.keras.preprocessing.image.img_to_array(image)
-                #input_arr = np.array([input_arr])  # Convert single image to a batch.
-                #input_arr = input_arr.astype('float32') / 255.  # This is VERY important
                 
-                print(input_arr.shape) # 1, 256, 256, 1
-                #ValueError: only 2D color images are supported
-
-                
-                # img1 = cv2.imread(pathOfImg)
-                # resized = tf.image.resize(img1, (256, 256))
-                
-                # resized = resized*255
-                # resized = np.array(resized, dtype=np.uint8)
-                # if np.ndim(resized)>3: 
-                #     assert resized.shape[0] == 1
-                #     resized = resized[0]
-                # print(resized.shape ) # 256, 256, 3
-                # Explain image instance with original image and the model prediction function
-                
-                ##### Gives attributeError: shape meaning that shape deosnt exist on PIL image....
+                # Exlpain instance via predict image
                 explanation = explainer.explain_instance(
                                 input_arr, 
                                 BreastCancerModelDetection.model.predict)
 
                 # Return original image and mask from the predicited class
                 image, mask = explanation.get_image_and_mask(predicted_class, 
-                                                            positives_only=True,
                                                             hide_rest=True)
                 
-                # Add mask and image as one concatenated image
-                finalImageArr = np.concatenate((image, mask), axis=1)
-                finalImage = Image.fromarray(finalImageArr)
-                finalImage = ""
-                print(predicted_class)
+                # Normalize image, convert to range between 0, 255 then turn into an integer then into a PIL image
+                finalImage = Image.fromarray(np.uint8(cm.gist_earth(image)*255))
+                finalMask = Image.fromarray(np.uint8(cm.gist_earth(mask)*255))
                 
-                # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img
-                return predicted_class, finalImage
+                # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img and mask for explanation
+                return predicted_class, finalImage, finalMask
             except FileNotFoundError:
                 print(f"File not found at {pathOfImg}")
                 

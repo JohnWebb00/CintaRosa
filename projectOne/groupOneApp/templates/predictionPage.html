@@ -1,20 +1,38 @@
-{% extends "base.html" %} 
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="d-flex justify-content-center custom-padding gap">
   <div class="card uploadCard">
-    <div class="card-body form-control" style="margin: auto; width: 18rem; margin-bottom: 2rem">
-        <input id="uploadedImageFile" type="file" accept="image/*" name="myImage"/>
-        <button type="button" class="btn btn-light uploadButton" id="uploadButton" style="width: 10rem;">Upload</button>       
+    <div
+      class="card-body form-control"
+      style="margin: auto; width: 18rem; margin-bottom: 2rem"
+    >
+      <input
+        id="uploadedImageFile"
+        type="file"
+        accept="image/*"
+        name="myImage"
+      />
+      <button
+        type="button"
+        class="btn btn-light uploadButton"
+        id="uploadButton"
+        style="width: 10rem"
+      >
+        Upload
+      </button>
     </div>
   </div>
   <div class="card uploadedPic">
-    <div class="card-body d-flex justify-content-center " id="imageContainer">
-    </div>
+    <div
+      class="card-body d-flex justify-content-center"
+      id="imageContainer"
+    ></div>
   </div>
 </div>
 <div class="d-flex justify-content-center custom-padding1">
-  <button type="button" class="btn btn-light predicButton" id="predictButton">Show result</button>
+  <button type="button" class="btn btn-light predicButton" id="predictButton">
+    Show result
+  </button>
 </div>
 <hr class="hr" />
 <div class="d-flex justify-content-center custom-padding1">
@@ -24,104 +42,109 @@
 </div>
 <div class="d-flex justify-content-center custom-padding1">
   <div class="card explainableAI">
-    <div class="card-body" id="data">Explainable AI design tbd later.
+    <div class="card-body" id="data">
+      Explainable AI design tbd later.
       <span id="predictionValue"></span>
-      {{ xaiPicture }}
+      {{ xaiPicture }} {{ xaiMask }}
     </div>
   </div>
 </div>
 
 <script>
-    function getCookie(name) {
-      var value = "; " + document.cookie;
-      var parts = value.split("; " + name + "=");
-      if (parts.length == 2) return parts.pop().split(";").shift();
+  function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
 
-      var cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-          var cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      var cookies = document.cookie.split(";");
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
       }
-      return cookieValue
     }
-  
+    return cookieValue;
+  }
 
-    $(document).ready(function () {
-      $("#uploadButton").click(function() {
-        var fileInput = document.getElementById('uploadedImageFile');
-        var imageContainer = document.getElementById('imageContainer');
-  
-        var file = fileInput.files[0];
-      
-        if (file) {
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            // Display the image in the div
-            imageContainer.innerHTML = '<img id="photo" src="' + e.target.result + ' " alt="Selected Image" width="130rem" height="130rem">';
-          };
-  
-          reader.readAsDataURL(file);
-        } else {
-          alert('Please choose an image file.');
-        }
-      }); });
+  $(document).ready(function () {
+    $("#uploadButton").click(function () {
+      var fileInput = document.getElementById("uploadedImageFile");
+      var imageContainer = document.getElementById("imageContainer");
 
-    const csrftoken = getCookie('csrftoken')  
-    $(document).ready(function () {
-        $("#predictButton").click(function() {
-            var userId = getCookie("userId");
-            var fileInput = document.querySelector('#uploadedImageFile');
-            
-            var formData = new FormData();
-            formData.append('predictionFile', fileInput.files[0]);
-            formData.append('userId', userId);
-            $.ajax({
-              url: "/predict/", 
-              type: "POST",
-              data: formData,
-              processData: false,
-              contentType: false,
-              beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRFToken', csrftoken);
-              },
-                //add the data with the image there
-              success: function (response) {
-                // No model existing should prohibit further behavior
-                if(response.error_model404) {
-                  alert(response.error_model404)
-                  return
-                }
+      var file = fileInput.files[0];
 
-                alert("Your prediction is ready!")
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          // Display the image in the div
+          imageContainer.innerHTML =
+            '<img id="photo" src="' +
+            e.target.result +
+            ' " alt="Selected Image" width="130rem" height="130rem">';
+        };
 
-                var resultColor;
+        reader.readAsDataURL(file);
+      } else {
+        alert("Please choose an image file.");
+      }
+    });
+  });
 
-                    if (response.predictionResult.includes("High Risk")) {
-                        resultColor = "red";
-                    } else if (response.predictionResult.includes("Low/No Risk")) {
-                        resultColor = "green";
-                    } else if (response.predictionResult.includes("Medium Risk")) {
-                        resultColor = "orange";
-                    } else {
-                        resultColor = "black"; // Default color if none of the conditions match
-                    }
+  const csrftoken = getCookie("csrftoken");
+  $(document).ready(function () {
+    $("#predictButton").click(function () {
+      var userId = getCookie("userId");
+      var fileInput = document.querySelector("#uploadedImageFile");
 
-                $("#predictionResult").text(response.predictionResult).css("color", resultColor);
-                // Handle the response here
-              },
-              error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Error: " + errorThrown);
-              },
-            });
-        });    
+      var formData = new FormData();
+      formData.append("predictionFile", fileInput.files[0]);
+      formData.append("userId", userId);
+      $.ajax({
+        url: "/predict/",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        //add the data with the image there
+        success: function (response) {
+          // No model existing should prohibit further behavior
+          if (response.error_model404) {
+            alert(response.error_model404);
+            return;
+          }
+
+          alert("Your prediction is ready!");
+
+          var resultColor;
+
+          if (response.predictionResult.includes("High Risk")) {
+            resultColor = "red";
+          } else if (response.predictionResult.includes("Low/No Risk")) {
+            resultColor = "green";
+          } else if (response.predictionResult.includes("Medium Risk")) {
+            resultColor = "orange";
+          } else {
+            resultColor = "black"; // Default color if none of the conditions match
+          }
+
+          $("#predictionResult")
+            .text(response.predictionResult)
+            .css("color", resultColor);
+          // Handle the response here
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
       });
-               
-</script>  
+    });
+  });
+</script>
 
 {% endblock %}
