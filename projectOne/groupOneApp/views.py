@@ -24,6 +24,7 @@ import zipfile
 from django.http import JsonResponse
 import re
 from django.utils import timezone
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Create gloabl model and load current h5 weights on model
 model = BreastCancerModelDetection()
@@ -56,6 +57,7 @@ def registerSuccess(request):
     }
     return render(request, 'registerSuccess.html', context)
 
+@staff_member_required
 def adminDashboard(request):
     currentModel = None
     modelList = []
