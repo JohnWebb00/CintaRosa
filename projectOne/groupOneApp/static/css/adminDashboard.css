@@ -29,11 +29,11 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    gap: 3rem;
+    gap: 2rem;
 }
 
 #trainBtn {
-    width: 100%;
+    width: 5rem;
     margin-top: 0rem;
 }
 

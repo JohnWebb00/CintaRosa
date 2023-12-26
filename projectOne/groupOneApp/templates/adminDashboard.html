@@ -1,26 +1,4 @@
 {% extends 'base.html' %} {% block content %}
-{% comment %} <div class="retrain-div">
-  <div class="retrain-btn">
-    <label>Retrain model</label>
-    <button id="trainBtn" class="btn btn-light uploadButton">Do it</button>
-    <div id="retraining" style="display: none">
-      <label>Model is being retrained....</label>
-      <div class="spinner-border text-success" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  </div>
-  <div>
-    {% if currentModel %}
-    <label
-      >Current model is
-      <b>{{currentModel.modelpath|cut:"cnnModel/models/"}}</b></label
-    >
-    {% else %}
-    <label>Current model is <b>NONE</b></label>
-    {% endif %}
-  </div>
-</div> {% endcomment %}
 <div class="retrain-allmodels">
   <div class="retrain">
     <div class="retrain-body">
