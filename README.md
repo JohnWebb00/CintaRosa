@@ -69,6 +69,8 @@ Revolutionary breast cancer detection online.
   - [Database Structure](#database-structure)
 
 - [Deployment](#deployment)
+  - [Prerequisites](#prerequisites)
+  - [Admin Functions on Deployment](#admin-functions-on-deployment)
   - [Google Cloud Setup](#google-cloud-setup)
   - [Google Cloud Deployment Structure](#google-cloud-deployment-structure)
   - [How Deployments Are Updated](#how-deployments-are-updated)
@@ -226,15 +228,26 @@ In the image provided, you will discover our database design, illustrating the r
 
 <a name="deployment"></a>
 # Deployment
+
+### Prerequisites
+- [here](https://cloud.google.com/sdk/docs/install#installation_instructions) you can install the gcloud cli tool required to access gcloud from the terminal
+- [here](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_kubectl) you can install kubectl, and it provides guidance on all the necessary installations required for using kubectl with the cluster
+
+- Sign into gcloud with `gcloud init`
+  - Please make sure the administrator has added you to the cluster so that you can select the correct project for cluster access
+
 <a name="google-cloud-setup"></a>
 ### **Google cloud setup**
-tbd
+In the prerequisites, it demonstrates the process of logging into gcloud and installing kubectl.
+
 <a name="google-cloud-deployment-structure"></a>
 ### **Google cloud deployment structure**
 tbd
+
 <a name="how-deployments-are-updated"></a>
 ### **How deployments are updated**
-tbd
+After checking `kubectl get pods` you can find the name of the current pod and using `kubectl delete POD-NAME` it will delete the pod and kuberenetes will re-pull the image and re-deploy the new image.
+Another way to re-deploy is to create a tag with the schema: v1 where the numbering depends on the developer. This will invoke the deploy stage in the gilab-ci and do the steps mentioned above automatically as well as re-building the image to the container registry.
 
 <a name="support"></a>
 # Support
