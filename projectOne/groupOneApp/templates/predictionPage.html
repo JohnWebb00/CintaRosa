@@ -91,6 +91,12 @@
               },
                 //add the data with the image there
               success: function (response) {
+                // No model existing should prohibit further behavior
+                if(response.error_model404) {
+                  alert(response.error_model404)
+                  return
+                }
+
                 alert("Your prediction is ready!")
 
                 var resultColor;
