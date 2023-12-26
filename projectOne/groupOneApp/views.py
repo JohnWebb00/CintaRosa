@@ -38,12 +38,14 @@ isCurrentlyUsed = ML_Model.objects.filter(currentlyUsed=True).first()
 if(isCurrentlyUsed is not None):
     #set the model version number to the id of the active model
     model.versionInt = isCurrentlyUsed.ml_model_id
+    
+    # Once model version number is updated by fetching the currentlyUsed model from db
+    # We create the model again by the specified model version
+    model.createModel()
 else:
+    # when no model exists we cannot predict, so 'contact Admin' is shown to users
     print("No model is currently selected for use")
 
-# Once model version number is updated by fetching the currentlyUsed model from db
-# We create the model again by the specified model version
-model.createModel()
 
 def homePage(request):
     context = {
@@ -460,6 +462,9 @@ def handle_uploaded_image(request):
     print(predictiondata.user)
 
     if request.method == "POST":  
+        if(model.model is None):
+            response = JsonResponse({'error_model404': 'Model is not initialized, contact Admin'})
+            return response
 
         # Get the image and store it in a variable  
         myImage = request.FILES.get('predictionFile')
