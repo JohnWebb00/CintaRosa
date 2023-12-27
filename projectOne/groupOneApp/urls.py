@@ -3,7 +3,7 @@ Authors:
 - ciuchta - ??
 - sejal - ??
 - zsolnai - georg.zsolnai123@gmail.com
-- ????
+- johnchri - johnchri@student.chalmers.se
 
 Usage: config/urls.py
 """

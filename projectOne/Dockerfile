@@ -1,5 +1,5 @@
 ## Authors:
-# - johnchri - ??
+# - johnchri - johnchri@student.chalmers.se
 # - zsolnai - georg.zsolnai123@gmail.com
 
 ## Usage: .gitlab-ci.yml

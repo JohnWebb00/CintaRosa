@@ -1,7 +1,7 @@
 ### Authors:
 
 # - zsolnai - georg.zsolnai123@gmail.com
-# - johnchri - ?
+# - johnchri - johnchri@student.chalmers.se
 
 ### Usage: Dockerfile
 

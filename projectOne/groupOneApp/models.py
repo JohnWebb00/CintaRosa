@@ -3,6 +3,7 @@ Authors:
 - ciuchta - ??
 - sejal - ??
 - zsolnai - georg.zsolnai123@gmail.com
+- johnchri - johnchri@student.chalmers.se
 
 Usage: groupOneApp/views.py, groupOneApp/serializers.py, groupOneApp/utils.py
 """

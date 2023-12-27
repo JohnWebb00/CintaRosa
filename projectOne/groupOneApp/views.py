@@ -3,7 +3,7 @@ Authors:
 - ciuchta - ??
 - sejal - ??
 - zsolnai - georg.zsolnai123@gmail.com
-- johnchri - ??
+- johnchri - johnchri@student.chalmers.se
 - ?????
 
 Usage: groupOneApp/urls.py

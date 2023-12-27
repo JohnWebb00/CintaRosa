@@ -1,6 +1,6 @@
 """
 Authors:
-- ??????
+- johnchri - johnchri@student.chalmers.se
 
 Usage: groupOneApp/views.py
 """
