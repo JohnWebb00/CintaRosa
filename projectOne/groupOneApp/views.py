@@ -275,7 +275,6 @@ def uploadImage(request):
     try:
         image_uploaded = request.FILES.get(['uploadButton'])
         image_url = os.path.join(settings.MEDIA_URL, os.path.basename(image_uploaded.name))
-
         # Return prediction
         context = {
             'current': 'predictionPage',
@@ -487,7 +486,20 @@ def handle_uploaded_image(request):
         predictiondata.beforeTimestamp = datetime.datetime.now() # gets current time before prediction
  
         # Use model.predict function of the CNN model and store the result
-        result, xaiPict, xaiMask = model.predict(image_dir)
+        result, xaiPict, prediction_arr = model.predict(image_dir)
+        
+        # Turn prediction Arr to percentage floats - shown in explainable AI to show the percentage of predicition for each label
+        prediction_arr[0] = float(prediction_arr[0]) * 100
+        prediction_arr[1] = float(prediction_arr[1]) * 100
+        prediction_arr[2] = float(prediction_arr[2]) * 100
+    
+        # save image inorder to serve it for frontend
+        xaiPict_name = f"explainable-{fileName}.png"
+        xaiPict_path = os.path.join(settings.MEDIA_ROOT, xaiPict_name)
+
+        xaiPict.save(xaiPict_path)
+                
+        # Get path of explainalble AI to return        
 
         # Result gets saved in the database
         predictiondata.result = result
@@ -510,13 +522,16 @@ def handle_uploaded_image(request):
         # Remove temp image (image will still be saved in media folder)
         fs.delete(fileName)
 
+    # define path required to load image in frontend
+    xaiPict_name_path = "../media/" + xaiPict_name
+    print(xaiPict_name_path)
     # Send the predicted result, userId and html page as a context to the json response
     context = {
         'current': 'predictionPage',
         'predictionResult': predictionText, 
         'userId': request.POST['userId'],
-        'xaiPicture': xaiPict,
-        'xaiMask': xaiMask
+        'xaiPicture': xaiPict_name_path,
+        'predictionsArr': prediction_arr
     }
 
     response = JsonResponse(context)

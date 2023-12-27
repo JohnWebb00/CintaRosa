@@ -40,12 +40,26 @@
     Prediction: <span id="predictionResult"> No prediction</span>
   </div>
 </div>
-<div class="d-flex justify-content-center custom-padding1">
+<div class="bottomSection" style="gap: 4rem">
   <div class="card explainableAI">
-    <div class="card-body" id="data">
-      Explainable AI design tbd later.
-      <span id="predictionValue"></span>
-      {{ xaiPicture }} {{ xaiMask }}
+    <h2>Explainable AI</h2>
+    <p style="text-align: center;">To explain our prediction we use a popular Explainable AI library that shows how our ML model made the decision to give the current prediciton. The technique highlights the pixels that our model highlights as strong indicators for the current prediction and as our model process the images, the LIME functionality keeps track of these indicators to show in the shown image.  </p>
+    <div class="xaiBody">
+      <div id="xaiDiv"/>
+      <div class="TextWithPredTable">
+        {% if predictionResult == 0 %} <!--If the image is benign-->
+        <span>Our model shows that the current image you uploaded shows that there are indications that there is a small growth detected which shows low amounts of abnormalities in shape </span>
+        {% elif predictionResult == 1 %} <!--If the image is malignant-->
+        <span>Malignant</span>
+        {% elif predictionResult == 2 %} <!--If the image is normal-->
+        <span>The image uploaded, based on our Model, shows that there is no detected growths.</span>
+        {% endif %}
+        
+        <h3>Table of predicition</h3>
+        {% for pred in predictionsArr %} <!--List of prediciton percentages-->
+        {{ pred }}
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>
@@ -137,6 +151,14 @@
           $("#predictionResult")
             .text(response.predictionResult)
             .css("color", resultColor);
+
+          var xaiDiv = document.getElementById("xaiDiv");
+          // Display the image in the div
+          xaiDiv.innerHTML =
+            '<img id="photoXai" src="' +
+            response.xaiPicture +
+            ' " alt="Selected Image" width="200rem" height="200rem">';
+ 
           // Handle the response here
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {

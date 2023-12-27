@@ -14,6 +14,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 import shutil
 from django.conf import settings
+from skimage.segmentation import mark_boundaries
 
 # Explainable AI
 from lime import lime_image
@@ -226,8 +227,9 @@ class BreastCancerModelDetection(models.Model):
                 # predict via the np array
                 prediction_arr = BreastCancerModelDetection.model.predict(np_predict)
                
-                # Get the predicted class from the prediction (meaning the final class predicted)
+                # Get the predicted class (via the index at which the max value is) from the prediction (meaning the final class predicted)
                 predicted_class = np.argmax(prediction_arr)
+                print(prediction_arr)
                 
                 # Create lime explainer
                 explainer = lime_image.LimeImageExplainer(random_state=42)
@@ -243,14 +245,14 @@ class BreastCancerModelDetection(models.Model):
 
                 # Return original image and mask from the predicited class
                 image, mask = explanation.get_image_and_mask(predicted_class, 
-                                                            hide_rest=True)
+                                                            hide_rest=False)
                 
                 # Normalize image, convert to range between 0, 255 then turn into an integer then into a PIL image
-                finalImage = Image.fromarray(np.uint8(cm.gist_earth(image)*255))
-                finalMask = Image.fromarray(np.uint8(cm.gist_earth(mask)*255))
+                # mark_boundaries just allows us to see where the model has marked its prediction
+                finalImage = Image.fromarray((mark_boundaries(image, mask) * 255).astype(np.uint8))
                 
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img and mask for explanation
-                return predicted_class, finalImage, finalMask
+                return predicted_class, finalImage, prediction_arr
             except FileNotFoundError:
                 print(f"File not found at {pathOfImg}")
                 
