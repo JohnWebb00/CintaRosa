@@ -5,10 +5,10 @@
 
 """
 Authors:
-- bardiaf - ??
+- bardiaf - gusforoba@student.gu.se
 - ...
 
-Usage: None
+Usage: model prototye version 3
 """
 
 import keras

@@ -4,7 +4,7 @@ Authors:
 - sejal - ??
 - zsolnai - georg.zsolnai123@gmail.com
 - johnchri - johnchri@student.chalmers.se
-- ?????
+- bardiaf - gusforoba@student.gu.se
 
 Usage: groupOneApp/urls.py
 """

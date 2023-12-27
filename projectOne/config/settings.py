@@ -2,6 +2,7 @@
 Authors:
 - zsolani - georg.zsolnai123@gmail.com
 - sejal - ???
+- bardiaf - gusforoba@student.gu.se
 
 Usage: Settings throughout entire project
 

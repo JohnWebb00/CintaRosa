@@ -1,9 +1,9 @@
 """
 Authors:
-- bardiaf - ??
+- bardiaf - gusforoba@student.gu.se
 - ...
 
-Usage: None
+Usage: model prototype version 1 - used in cnnModel/models.py
 """
 
 import keras

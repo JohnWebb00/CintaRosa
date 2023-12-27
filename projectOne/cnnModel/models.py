@@ -1,6 +1,6 @@
 """
 Authors:
-- bardiaf - ??
+- bardiaf - gusforoba@student.gu.se
 - zsolnai - georg.zsolnai123@gmail.com
 - sejal - ??
 
