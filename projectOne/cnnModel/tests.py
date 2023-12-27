@@ -2,7 +2,7 @@
 Authors:
 - johnchri - johnchri@student.chalmers.se
 
-Usage: cnnModel/models.py
+Usage: None
 """
 
 from django.test import TestCase
