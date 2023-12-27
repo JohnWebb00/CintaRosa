@@ -1,11 +1,9 @@
 import unittest
-from models import BreastCancerModelDetection 
-from groupOneApp.models import ML_model 
+from .models import BreastCancerModelDetection 
 import os
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 import keras
-from projectOne.groupOneApp.models import Prediction
 
 class modelTests(unittest.TestCase):
     def test_createModel(self):
@@ -115,15 +113,30 @@ class modelTests(unittest.TestCase):
             self.assertIn("File not found at", str(context.exception))
             
     def test_predict_normal(self):
-        classification = BreastCancerModelDetection.predict("cnnModel/kaggle_image_data/normal/normal1.png")
+        #Get a random image number from 1 to 133 to get a random image of the 133 normal images
+        imgNr = random.randint(1, 133)
+        #Predict the classifcation of the randomly selected normal image
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal{imgNr}.png")
+        #Assert that the image is normal
         self.assertEqual(classification, 2)
         
     def test_predict_malignant(self):
-        classification = BreastCancerModelDetection.predict("cnnModel/kaggle_image_data/normal/malignant1.png")
+        #Get a random image number from 1 to 210 to get a random image of the 210 malignant images
+        imgNr = random.randint(1, 210)
+        #Predict the classifcation of the randomly selected malignant image
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/malignant{imgNr}.png")
+        #Assert that the image is malignant 
         self.assertEqual(classification, 1)
     
     def test_predict_benign(self):
-        classification = BreastCancerModelDetection.predict("cnnModel/kaggle_image_data/normal/benign1.png")
+        #Get a random image number from 1 to 437 to get a random image of the 437 benign images
+        imgNr = random.randint(1, 437)
+        #Predict the classifcation of the randomly selected benign image
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/benign{imgNr}.png")
+        #Assert that the image is benign
         self.assertEqual(classification, 0)
+        
+if __name__ == '__main__':
+    unittest.main()
     
     
