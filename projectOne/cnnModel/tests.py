@@ -45,12 +45,12 @@ class modelTests(unittest.TestCase):
         expectedLoss = 'sparse_categorical_crossentropy'
         expectedMetrics = ['accuracy']
         #Fetching list of metric names from the list of metric objects compiled with the model
-        compiledMetricName = [metric.name for metric in BreastCancerModelDetection.model.metrics]
+        ##compiledMetricName = [metric.name for metric in BreastCancerModelDetection.model.metrics]
 
         # Assert that the model is contains the expected optimizer, loss, and metric parameters
         self.assertEqual(BreastCancerModelDetection.model.optimizer.get_config(), expectedOptimizer.get_config())
         self.assertEqual(BreastCancerModelDetection.model.loss, expectedLoss)
-        self.assertEqual(compiledMetricName, expectedMetrics)
+        self.assertEqual(BreastCancerModelDetection.model.metrics, expectedMetrics)
         
         path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
 
@@ -135,7 +135,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 133 to get a random image of the 133 normal images
         imgNr = random.randint(1, 133)
         #Predict the classifcation of the randomly selected normal image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal{imgNr}.png")
+        classification = BreastCancerModelDetection.predict(f"projectOne/cnnModel/kaggle_image_data/normal/normal ({imgNr}).png")
         #Assert that the image is normal
         self.assertEqual(classification, 2)
         
@@ -143,7 +143,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 210 to get a random image of the 210 malignant images
         imgNr = random.randint(1, 210)
         #Predict the classifcation of the randomly selected malignant image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/malignant/malignant{imgNr}.png")
+        classification = BreastCancerModelDetection.predict(f"projectOne/cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png")
         #Assert that the image is malignant 
         self.assertEqual(classification, 1)
     
@@ -151,7 +151,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 437 to get a random image of the 437 benign images
         imgNr = random.randint(1, 437)
         #Predict the classifcation of the randomly selected benign image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/benign/benign{imgNr}.png")
+        classification = BreastCancerModelDetection.predict(f"projectOne/cnnModel/kaggle_image_data/benign/benign ({imgNr}).png")
         #Assert that the image is benign
         self.assertEqual(classification, 0)
         
