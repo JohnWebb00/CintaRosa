@@ -26,6 +26,11 @@ Revolutionary breast cancer detection online.
 - [Deployment](#deployment)
   - [Prerequisites](#prerequisites)
   - [Admin Functions on Deployment](#admin-functions-on-deployment)
+      - [Find the pod](#find-the-pod)
+      - [Create Superuser for admin page](#create-superuser-for-admin-page)
+      - [Add image data to deployed pod](#add-image-data-to-deployed-pod)
+      - [Connect to pod for command line access](#connect-to-pod-for-command-line-access)
+      - [display the name of the currently running pod](#display-the-name-of-the-currently-running-pod)
   - [Google Cloud Setup](#google-cloud-setup)
   - [Google Cloud Deployment Structure](#google-cloud-deployment-structure)
   - [How Deployments Are Updated](#how-deployments-are-updated)
@@ -146,7 +151,7 @@ If you're using Django, perform the database migrations:
 <a name="how-to-use-the-website-for-regular-users"></a>
 #### How to use the website (For regular users)
 
-1. Head over to our website
+1. Head over to our [website](http://34.38.29.191/)
 2. On the main page click on LOGIN button if you already have an account, otherwise REGISTER yourself
 ![homePage](screenshots/home-page.png)
 ![userLogin](screenshots/user-login.png)
@@ -190,6 +195,45 @@ In the image provided, you will discover our database design, illustrating the r
 
 - Sign into gcloud with `gcloud init`
   - Please make sure the administrator has added you to the cluster so that you can select the correct project for cluster access
+
+
+<a name="admin-functions-on-deployment"></a>
+### Admin Functions on Deployment
+
+<a name="find-the-pod"></a>
+1. #### **Find the pod**
+- Navigate to the Google Cloud dashboard and locate the deployed pod
+- Use `kubectl get pods` and take the name displayed in the cmd line
+
+<a name="create-superuser-for-admin-page"></a>
+2. #### **Create Superuser for admin page**
+
+   ```bash
+   kubectl exec -it POD-NAME -- /bin/bash -c "cd /projectOne && python manage.py createsuperuser" 
+   ```
+
+<a name="add-image-data-to-deployed-pod"></a>
+3. #### **Add image data to deployed pod**
+
+   When inside the base directory (dit-group1-part2/)
+   ```bash
+   cd projectOne/cnnModel && kubectl cp kaggle_image_data POD-NAME:/projectOne/cnnModel/kaggle_image_data
+   ```
+
+<a name="connect-to-pod-for-command-line-access"></a>
+4. #### **Connect to pod for command line access**
+
+   Connecting to the pod lets you check files, upload files and transfer files to local machines
+   ```bash
+   kubectl exec -it POD-NAME -- bash -c "cd /projectOne && /bin/bash"
+   ```
+
+<a name="display-the-name-of-the-currently-running-pod"></a>
+5. #### **Run this command to display the name of the currently running pod**
+   ```bash
+   kubectl get pods | grep -e "Running" | awk '{print $1}'
+   ```
+
 
 <a name="google-cloud-setup"></a>
 ### **Google cloud setup**
