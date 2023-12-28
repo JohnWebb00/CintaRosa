@@ -1,3 +1,4 @@
+from re import I
 import unittest
 from .models import BreastCancerModelDetection 
 import os
@@ -44,13 +45,11 @@ class modelTests(unittest.TestCase):
         expectedOptimizer = keras.optimizers.Adam(0.001)
         expectedLoss = 'sparse_categorical_crossentropy'
         expectedMetrics = ['accuracy']
-        #Fetching list of metric names from the list of metric objects compiled with the model
-        ##compiledMetricName = [metric.name for metric in BreastCancerModelDetection.model.metrics]
 
         # Assert that the model is contains the expected optimizer, loss, and metric parameters
         self.assertEqual(BreastCancerModelDetection.model.optimizer.get_config(), expectedOptimizer.get_config())
         self.assertEqual(BreastCancerModelDetection.model.loss, expectedLoss)
-        self.assertEqual(BreastCancerModelDetection.model.metrics, expectedMetrics)
+        self.assertEqual(BreastCancerModelDetection.model.metrics_names, expectedMetrics)
         
         path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
 
