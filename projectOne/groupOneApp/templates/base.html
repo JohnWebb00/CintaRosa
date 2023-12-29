@@ -31,18 +31,18 @@
         {% if current == 'homePage' %}
         <button
           type="button"
-          class="btn btn-light logIn-button"
+          class="btn btn-light button"
           onclick="window.location.href='{% url 'userLogin' %}'"
         >
           Log in
         </button>
         {% elif current == 'userLogin' %} {% elif current == 'userDashboard' %}
-        <button type="button" class="btn btn-light logIn-button logout">
+        <button type="button" class="btn btn-light button logout">
           Log out
         </button>
         {% elif current == 'predictionPage' %}
         <div>
-          <button type="button" class="btn btn-light logIn-button logout">
+          <button type="button" class="btn btn-light button logout">
             Log out
           </button>
         </div>
