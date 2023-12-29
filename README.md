@@ -160,19 +160,19 @@ If you're using Django, perform the database migrations:
 
 1. Head over to our [website](http://34.38.29.191/)
 2. On the main page click on LOGIN button if you already have an account, otherwise REGISTER yourself
-![homePage](screenshots/home-page.png)
-![userLogin](screenshots/user-login.png)
+<img src="screenshots/home-page.png" alt="homePage" width="600"/>
+<img src="screenshots/user-login.png" alt="userLogin" width="600"/>
 3. On the prediction page, click on the `choose file` to upload your ultrasonic picture of your breast (.png) and the click on `show result` to see the result
-![predictionPage](screenshots/prediction-page.png)
+<img src="screenshots/prediction-page.png" alt="predictionPage" width="600"/>
 4. On the user dashboard page, you can view the upload history of your images, including associated date and corresponding results
-![userDashboard](screenshots/user-dashboard.png)
-![userDashboardPrediction](screenshots/user-dashboard-predictions.png)
+<img src="screenshots/user-dashboard.png" alt="userDashboard" width="600"/>
+<img src="screenshots/user-dashboard-predictions.png" alt="userDashboardPrediction" width="600"/>
 Clicking on the pink box on the left side of the page will navigate you to the prediction page, allowing you to upload additional images
 
 <a name="how-to-use-the-website-for-administrators"></a>
 #### How to use the website (For administrators)
 On the admin dashboard page, administrators have three options that contribute to model retraining, ultimately enhancing model accuracy
-![adminDashboard](screenshots/admin-dashboard.png)
+<img src="screenshots/admin-dashboard.png" alt="adminDashboard" width="600"/>
 
 1. **Upload image(s):** On the left side, you have the option to upload images. Images can be uploaded either in batches or as individual files. If you choose to upload a batch of images, they should be in the form of zip files. For single-image uploads, ensure the image is in the PNG file format
 
@@ -187,13 +187,13 @@ On the admin dashboard page, administrators have three options that contribute t
 # Project Structure (For Developers)
 ### Directory Layout
 The project primarily comprises two components: cnnModel, responsible for designing the model and handling training and prediction, and groupOneApp, where the database structure, frontend, and backend of the website are defined.
-![directoryStructure](screenshots/directory-structure.png)
+<img src="screenshots/directory-structure.png" alt="directoryStructure" width="300"/>
 
 <a name="database-structure"></a>
 
 ### Database Structure
 In the image provided, you will discover our database design, illustrating the relationships between entities. This offers a comprehensive overview of the project.
-![DB](screenshots/db.png)
+<img src="screenshots/db.png" alt="Database" width="550"/>
 
 <a name="deployment"></a>
 
@@ -213,13 +213,13 @@ In the image provided, you will discover our database design, illustrating the r
 
 <a name="find-the-pod"></a>
 
-1. #### **Find the pod**
+1. #### Find the pod
 - Navigate to the Google Cloud dashboard and locate the deployed pod
 - Use `kubectl get pods` and take the name displayed in the cmd line
 
 <a name="create-superuser-for-admin-page"></a>
 
-2. #### **Create Superuser for admin page**
+2. #### Create Superuser for admin page
 
    ```bash
    kubectl exec -it POD-NAME -- /bin/bash -c "cd /projectOne && python manage.py createsuperuser" 
@@ -227,7 +227,7 @@ In the image provided, you will discover our database design, illustrating the r
 
 <a name="add-image-data-to-deployed-pod"></a>
 
-3. #### **Add image data to deployed pod**
+3. #### Add image data to deployed pod
 
    When inside the base directory (dit-group1-part2/)
    ```bash
@@ -236,7 +236,7 @@ In the image provided, you will discover our database design, illustrating the r
 
 <a name="connect-to-pod-for-command-line-access"></a>
 
-4. #### **Connect to pod for command line access**
+4. #### Connect to pod for command line access
 
    Connecting to the pod lets you check files, upload files and transfer files to local machines
    ```bash
@@ -245,7 +245,7 @@ In the image provided, you will discover our database design, illustrating the r
 
 <a name="display-the-name-of-the-currently-running-pod"></a>
 
-5. #### **Display the name of the currently running pod**
+5. #### Display the name of the currently running pod
    ```bash
    kubectl get pods | grep -e "Running" | awk '{print $1}'
    ```
