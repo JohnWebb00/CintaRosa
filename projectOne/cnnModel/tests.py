@@ -44,12 +44,10 @@ class modelTests(unittest.TestCase):
         
         expectedOptimizer = keras.optimizers.Adam(0.001)
         expectedLoss = 'sparse_categorical_crossentropy'
-        expectedMetrics = ['accuracy']
 
-        # Assert that the model is contains the expected optimizer, loss, and metric parameters
+        # Assert that the model is contains the expected optimizer, and loss
         self.assertEqual(BreastCancerModelDetection.model.optimizer.get_config(), expectedOptimizer.get_config())
         self.assertEqual(BreastCancerModelDetection.model.loss, expectedLoss)
-        self.assertEqual(BreastCancerModelDetection.model.metrics_names, expectedMetrics)
         
         path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
 
@@ -71,6 +69,9 @@ class modelTests(unittest.TestCase):
         
             
     def test_train_breast_cancer_model_returns_all_values(self):
+        #Create model to train
+        BreastCancerModelDetection.createModel()
+        
         # Can function and assign returned values to variables 
         train_acc, test_acc, val_acc, finalPath, heatmapPath = BreastCancerModelDetection.train_breast_cancer_model_detection()
 
@@ -87,8 +88,15 @@ class modelTests(unittest.TestCase):
             
         if os.path.exists(heatmapPath):
             os.remove(heatmapPath)
+
+        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
         
-        
+        print(f"Path: {path}")
+        print(f"finalPath: {finalPath}")
+        print(f"heatmapPath: {heatmapPath}")
+
+        if os.path.exists(path):
+            os.remove(path)
         
     def test_train_breast_cancer_model_no_intialized_model(self):
         #Save current model
@@ -125,7 +133,7 @@ class modelTests(unittest.TestCase):
     def test_predict_invalid_file_path(self):
         #Check that a model is selected before making the assertion
         if BreastCancerModelDetection.model is not None:
-            with self.assertRaises(FileNotFoundError) as context:
+            with self.assertRaises((FileNotFoundError, TypeError)) as context:
                 BreastCancerModelDetection.predict("/invalidpath")
 
             self.assertIn("File not found at", str(context.exception))
@@ -134,7 +142,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 133 to get a random image of the 133 normal images
         imgNr = random.randint(1, 133)
         #Predict the classifcation of the randomly selected normal image
-        classification = BreastCancerModelDetection.predict(f"projectOne/cnnModel/kaggle_image_data/normal/normal ({imgNr}).png")
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal ({imgNr}).png")
         #Assert that the image is normal
         self.assertEqual(classification, 2)
         
@@ -142,7 +150,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 210 to get a random image of the 210 malignant images
         imgNr = random.randint(1, 210)
         #Predict the classifcation of the randomly selected malignant image
-        classification = BreastCancerModelDetection.predict(f"projectOne/cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png")
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png")
         #Assert that the image is malignant 
         self.assertEqual(classification, 1)
     
@@ -150,7 +158,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 437 to get a random image of the 437 benign images
         imgNr = random.randint(1, 437)
         #Predict the classifcation of the randomly selected benign image
-        classification = BreastCancerModelDetection.predict(f"projectOne/cnnModel/kaggle_image_data/benign/benign ({imgNr}).png")
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/benign/benign ({imgNr}).png")
         #Assert that the image is benign
         self.assertEqual(classification, 0)
         

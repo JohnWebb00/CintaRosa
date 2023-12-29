@@ -53,17 +53,22 @@ class BreastCancerModelDetection(models.Model):
         # if the image is an image, dont need to pass string
         img1 = image_path
         
-        # It ensures image_path is a string
-        if isinstance(image_path, str):
-            #raise ValueError("Image path should be a string.")
-            # It reads the image from path
-            img1 = cv2.imread(image_path)
-        # if the instance is not a path but an actual image
+        if image_path is None:
+            raise TypeError(f"File not found at {image_path}")
         
-        # Turns img to grayscale
-        img2 = tf.image.rgb_to_grayscale(img1)
-        resized = tf.image.resize(img2, (256, 256))
-        final = np.expand_dims((resized / 255), 0)
+        # It ensures image_path is a string
+        
+        else:
+            if isinstance(image_path, str):
+                #raise ValueError("Image path should be a string.")
+                # It reads the image from path
+                img1 = cv2.imread(image_path)
+            # if the instance is not a path but an actual image
+            
+            # Turns img to grayscale
+            img2 = tf.image.rgb_to_grayscale(img1)
+            resized = tf.image.resize(img2, (256, 256))
+            final = np.expand_dims((resized / 255), 0)
 
         return final
 
@@ -257,6 +262,8 @@ class BreastCancerModelDetection(models.Model):
                 return predicted_class
             except FileNotFoundError as error:
                 raise FileNotFoundError(f"File not found at {pathOfImg}") from error
+            except TypeError as error:
+                raise TypeError(f"File not found at {pathOfImg}") from error
                 
     
 
