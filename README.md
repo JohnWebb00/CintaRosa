@@ -40,23 +40,29 @@ Revolutionary breast cancer detection online.
 - [License](#license)
 
 <a name="introduction"></a>
+
 # Introduction
 
 <a name="project-overview"></a>
+
 ### **Project Overview** 
 Our project revolves around the development of a cutting-edge breast cancer detection website. Harnessing the power of Convolutional Neural Networks (CNN), the platform is designed to analyze medical images, specifically those of breast tissue, with the goal of swiftly and accurately identifying potential tumors. This technological innovation has the potential to significantly improve the early detection of breast cancer, offering a valuable tool for individuals alike.
 
 <a name="purpose-and-goals"></a>
+
 ### **Purpose and Goals**
 The primary purpose of our project is to contribute to the early detection of breast cancer, a crucial factor in improving patient outcomes. By leveraging advanced algorithms, we aim to automate the analysis of breast tumor characteristics, classifying them as malignant, benign, or normal. Our goals include providing a user-friendly platform that simplifies the detection process, ensuring accessibility for the general public. Through this project, we aspire to make a meaningful impact on the efficiency and accuracy of breast cancer diagnosis, ultimately leading to better prognosis and timely medical interventions.
 
 <a name="project-initiation"></a>
+
 # Project Initiation 
 
 <a name="for-developers"></a>
+
 ### **For Developers**
 
 <a name="installation"></a>
+
 ### **Installation**
 1. Go to https://git.chalmers.se/courses/dit826/2023/group1/dit826-group1
 2. Clone the project into a directory of your choosing using either SSH or HTTPS
@@ -68,6 +74,7 @@ cd projectOne
 python manage.py runserver
 ```
 <a name="system-requirements"></a>
+
 ### **System Requirements**
 
 ##### Minimum Requirements
@@ -176,17 +183,20 @@ On the admin dashboard page, administrators have three options that contribute t
 3. **Table of models:** You can explore various models and select one based on your preference, also viewing each model's accuracy.
 
 <a name="project-structure-for-developers"></a>
+
 # Project Structure (For Developers)
 ### Directory Layout
 The project primarily comprises two components: cnnModel, responsible for designing the model and handling training and prediction, and groupOneApp, where the database structure, frontend, and backend of the website are defined.
 ![directoryStructure](screenshots/directory-structure.png)
 
 <a name="database-structure"></a>
+
 ### Database Structure
 In the image provided, you will discover our database design, illustrating the relationships between entities. This offers a comprehensive overview of the project.
 ![DB](screenshots/db.png)
 
 <a name="deployment"></a>
+
 # Deployment
 
 ### Prerequisites
@@ -198,14 +208,17 @@ In the image provided, you will discover our database design, illustrating the r
 
 
 <a name="admin-functions-on-deployment"></a>
+
 ### Admin Functions on Deployment
 
 <a name="find-the-pod"></a>
+
 1. #### **Find the pod**
 - Navigate to the Google Cloud dashboard and locate the deployed pod
 - Use `kubectl get pods` and take the name displayed in the cmd line
 
 <a name="create-superuser-for-admin-page"></a>
+
 2. #### **Create Superuser for admin page**
 
    ```bash
@@ -213,6 +226,7 @@ In the image provided, you will discover our database design, illustrating the r
    ```
 
 <a name="add-image-data-to-deployed-pod"></a>
+
 3. #### **Add image data to deployed pod**
 
    When inside the base directory (dit-group1-part2/)
@@ -221,6 +235,7 @@ In the image provided, you will discover our database design, illustrating the r
    ```
 
 <a name="connect-to-pod-for-command-line-access"></a>
+
 4. #### **Connect to pod for command line access**
 
    Connecting to the pod lets you check files, upload files and transfer files to local machines
@@ -229,26 +244,37 @@ In the image provided, you will discover our database design, illustrating the r
    ```
 
 <a name="display-the-name-of-the-currently-running-pod"></a>
-5. #### **Run this command to display the name of the currently running pod**
+
+5. #### **Display the name of the currently running pod**
    ```bash
    kubectl get pods | grep -e "Running" | awk '{print $1}'
    ```
 
 
 <a name="google-cloud-setup"></a>
+
 ### **Google cloud setup**
 In the prerequisites, it demonstrates the process of logging into gcloud and installing kubectl.
 
 <a name="google-cloud-deployment-structure"></a>
+
 ### **Google cloud deployment structure**
-tbd
+![k8s](screenshots/k8s.png)
+
+In Kubernetes, applications reside in temporary units called pods, each getting a new IP address when launched. These pods are regularly recreated during updates. Without Kubernetes service, keeping track of pod IP addresses would be challenging, especially as our application scales up, risking downtime.
+
+Kubernetes service simplifies this by creating an abstraction that represents one or more pods. Other applications can access the service using its name, eliminating the need to know individual pod IP addresses. External users can also access these services if they are publicly exposed on the internet.
+
+   Excerpt From https://www.densify.com/kubernetes-autoscaling/kubernetes-service-load-balancer/ 
 
 <a name="how-deployments-are-updated"></a>
+
 ### **How deployments are updated**
 After checking `kubectl get pods` you can find the name of the current pod and using `kubectl delete POD-NAME` it will delete the pod and kuberenetes will re-pull the image and re-deploy the new image.
 Another way to re-deploy is to create a tag with the schema: v1 where the numbering depends on the developer. This will invoke the deploy stage in the gilab-ci and do the steps mentioned above automatically as well as re-building the image to the container registry.
 
 <a name="support"></a>
+
 # Support
 If you have any technical or general questions, suggestions, or concerns about the project, feel free to contact the project developers via email.
 - AGATA CIUCHTA - gusciuag@student.gu.se
@@ -258,6 +284,7 @@ If you have any technical or general questions, suggestions, or concerns about t
 - SEJAL ULHAS KANASKAR - guskanase@student.gu.se
 
 <a name="license"></a>
+
 # License
 This project is licensed under the MIT License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
