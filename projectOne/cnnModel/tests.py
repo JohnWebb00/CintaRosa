@@ -49,7 +49,7 @@ class modelTests(unittest.TestCase):
         self.assertEqual(BreastCancerModelDetection.model.optimizer.get_config(), expectedOptimizer.get_config())
         self.assertEqual(BreastCancerModelDetection.model.loss, expectedLoss)
         
-        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{new_version}.h5")
+        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
         finalPath = os.path.join("cnnModel", path)
 
         if os.path.exists(finalPath):
@@ -80,22 +80,29 @@ class modelTests(unittest.TestCase):
         self.assertTrue(isinstance(train_acc, float))  
         self.assertTrue(isinstance(test_acc, float))  
         self.assertTrue(isinstance(val_acc, float)) 
-        self.assertTrue(finalPath.startswith("cnnModel/models/"))  
-        self.assertTrue(heatmapPath.startswith("media/"))
-
+        self.assertTrue(finalPath.startswith("cnnModel/models/"))
+        self.assertTrue(os.path.exists(finalPath)) # Check it exists in folder
+        self.assertTrue(heatmapPath.startswith("breastCancerModel_v")) # Since django looks into the media directory when no absolute path is given, we must check the file existing rather than the folder its in
+        self.assertTrue(os.path.exists(os.path.join("media", heatmapPath))) # Check that the media folder contains image
+        
+        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
+        finalPath = os.path.join("cnnModel", path)
+        
         # Cleanup heatmap and model
         if os.path.exists(finalPath):
             os.remove(finalPath)
             
-        if os.path.exists(heatmapPath):
-            os.remove(heatmapPath)
-
-        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
-        finalPath = os.path.join("cnnModel", path)
+        heatmapFullPath = os.path.join("media", heatmapPath)   
+         
+        if os.path.exists(heatmapFullPath):
+            os.remove(heatmapFullPath)
         
-
-        if os.path.exists(finalPath):
-            os.remove(finalPath)
+        modelPath = os.path.join("model_plot", f"model_{BreastCancerModelDetection.versionInt}.png")
+        finalPathPlot = os.path.join("cnnModel", modelPath)
+        
+        # cleanup model plot
+        if os.path.exists(finalPathPlot):
+            os.remove(finalPathPlot)
         
     def test_train_breast_cancer_model_no_intialized_model(self):
         #Save current model
@@ -137,11 +144,15 @@ class modelTests(unittest.TestCase):
 
             self.assertIn("File not found at", str(context.exception))
             
+            
+    #ADD array for when changes from branch #8 are added      
+            
+            
     def test_predict_normal(self):
         #Get a random image number from 1 to 133 to get a random image of the 133 normal images
         imgNr = random.randint(1, 133)
         #Predict the classifcation of the randomly selected normal image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal ({imgNr}).png")
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal ({imgNr}).png")#[0] # return only prediction val
         #Assert that the image is normal
         self.assertEqual(classification, 2)
         
@@ -149,7 +160,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 210 to get a random image of the 210 malignant images
         imgNr = random.randint(1, 210)
         #Predict the classifcation of the randomly selected malignant image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png")
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png")#[0] # return only prediction val
         #Assert that the image is malignant 
         self.assertEqual(classification, 1)
     
@@ -157,7 +168,7 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 437 to get a random image of the 437 benign images
         imgNr = random.randint(1, 437)
         #Predict the classifcation of the randomly selected benign image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/benign/benign ({imgNr}).png")
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/benign/benign ({imgNr}).png")#[0] # return only prediction val
         #Assert that the image is benign
         self.assertEqual(classification, 0)
         
