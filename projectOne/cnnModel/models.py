@@ -14,6 +14,12 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 import shutil
 from django.conf import settings
+from skimage.segmentation import mark_boundaries
+
+# Explainable AI
+from lime import lime_image
+from PIL import Image 
+from matplotlib import cm
 
 # enable heatmap plotting by running matplot on separate thread instead of main
 matplotlib.use('agg')
@@ -24,7 +30,9 @@ MODEL_VERSION_INT = 1
 ## CNNMODEL = attrs: file, accuracy, heatmap, deployed (TRUE FALSE)
 # CNNMODEL.object.filter(deployed=True) --> the current deployed model --> MODEL_VERSION trimmed file path
 
-# Create your models here.
+physical_devices = tf.config.list_physical_devices('GPU') 
+if(len(physical_devices) > 0):
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 class BreastCancerModelDetection(models.Model):
 
     model = None # Class variable to store the model
@@ -66,55 +74,18 @@ class BreastCancerModelDetection(models.Model):
             # if the instance is not a path but an actual image
             
             # Turns img to grayscale
-            img2 = tf.image.rgb_to_grayscale(img1)
-            resized = tf.image.resize(img2, (256, 256))
+            #img2 = tf.image.rgb_to_grayscale(img1)
+            resized = tf.image.resize(img1, (256, 256))
             final = np.expand_dims((resized / 255), 0)
 
         return final
 
 
     @staticmethod
-    def images_to_csv(input_directory, output_csv_path):
-        write_header = not os.path.exists(output_csv_path)
-
-        # Open the CSV file in append mode
-        with open(output_csv_path, 'a', newline='') as csv_file:
-            csv_writer = csv.writer(csv_file)
-
-            if write_header:
-                header_row = ['Label'] + [f'P-{i}' for i in range(256 * 256)]
-                csv_writer.writerow(header_row)
-
-            # Process each image in the input directory
-            for filename in os.listdir(input_directory):
-                if filename.endswith('.png') or filename.endswith('.jpg') or filename.endswith('.jpeg'):
-                    image_path = join(input_directory, filename)
-
-                    img_array = BreastCancerModelDetection.to_numpy(image_path)
-
-                    # Reshape the 2D array into a 1D array
-                    flattened_array = img_array.flatten()
-
-                    if "malignant" in filename:
-                        label = 1
-                    elif "benign" in filename:
-                        label = 0
-                    elif "normal" in filename:
-                        label = 2
-                    else:
-                        label = -1  # Placeholder for other labels
-
-                    # Write it to the CSV file
-                    csv_writer.writerow([label] + list(flattened_array))
-
-        print(f"Images in '{input_directory}' have been converted and appended to the CSV file '{output_csv_path}'.")
-
-
-    @staticmethod
     def prepare_image_data(dataPath):
 
         # Read datasets
-        data = tf.keras.utils.image_dataset_from_directory(dataPath, label_mode='int', color_mode="grayscale")
+        data = tf.keras.utils.image_dataset_from_directory(dataPath, label_mode='int') #, color_mode="grayscale")
         data = data.map(lambda x, y: (x / 255, y))
 
         # calculate train, validation, test size via 70/20/10 split
@@ -137,7 +108,7 @@ class BreastCancerModelDetection(models.Model):
 
         # Convolutional layers
         ## SHould be this dont change
-        BreastCancerModelDetection.model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 1)))
+        BreastCancerModelDetection.model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
         BreastCancerModelDetection.model.add(MaxPooling2D((2, 2)))
         BreastCancerModelDetection.model.add(Dropout(0.25))  # Dropout layer
 
@@ -177,23 +148,29 @@ class BreastCancerModelDetection(models.Model):
     @staticmethod
     def train_breast_cancer_model_detection():
         if BreastCancerModelDetection.model is None:
-            raise ValueError("Model has not been initialized.")
+            # creates model but doesnt load weights as none exist yet
+            BreastCancerModelDetection.createModel()
         
         print("Model retraining started in backend")
         
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
         dataPath = str(data_OSPath)
      
+        # Create train, validation and test sets from the image data stored locally
         train_data, validation_data, test_data = BreastCancerModelDetection.prepare_image_data(dataPath)
         
-        train_batch_size = 10
-        train_epochs = 12
+        curr_batch_size = 16
+        train_epochs = 10
         # Create TensorBoard callback for logging
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs")
+        
         # Train on the training and validation set
-        BreastCancerModelDetection.history_train = BreastCancerModelDetection.model.fit(train_data, batch_size=train_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
-        BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=train_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
+        BreastCancerModelDetection.history_train = BreastCancerModelDetection.model.fit(train_data, batch_size=curr_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
+        BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=curr_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
 
+        # evaluate the model
+        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
+        
         # Checks current version then returns with new version
         new_version = BreastCancerModelDetection.checkCurrVersion()
         
@@ -202,22 +179,19 @@ class BreastCancerModelDetection(models.Model):
         
         # save weights to folder
         BreastCancerModelDetection.model.save(finalPath)
-
-        # evaluate the model
-        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
         
-        # Find labels of test data for confusion matrix creation
-        y_test = np.concatenate([y for x, y in test_data], axis=0)
-        
-        # create predicted classes which represents a set of predictions and their labels
-        predicted_classes = BreastCancerModelDetection.model.predict(test_data, verbose='auto', batch_size=train_batch_size) #length 25, due to only needing to predict 25 images
-        predicted_classes = np.argmax(predicted_classes, axis=1)
+        # Find labels of validation data for confusion matrix creation
+        y_labels = np.concatenate([y for x, y in test_data], axis=0)
+    
+        # Find predicted classes to compare with actual labels
+        predictions = BreastCancerModelDetection.model.predict(test_data)
+        pred_classes = np.argmax(predictions, axis=1)
         
         # Create confusion matrix based on the predicted classes and their actual values
-        conf_matrix = confusion_matrix(y_test, predicted_classes)
+        conf_matrix = confusion_matrix(y_labels, pred_classes)
         
         # Plot heat map based on the confusion matrix
-        heatmap = sns.heatmap(conf_matrix, annot=True)
+        heatmap = sns.heatmap(conf_matrix, annot=True, fmt='g', xticklabels=['Benign', 'Malignant', 'Normal'], yticklabels=['Benign', 'Malignant', 'Normal'])
         fig = heatmap.get_figure()
         
         # Create heatmap folder
@@ -232,6 +206,8 @@ class BreastCancerModelDetection(models.Model):
         # Create Model Image (only for backend NOT to be returned)
         plot_name = os.path.join("model_plot", f'model_{new_version}.png')
         dot_img_file = os.path.join("cnnModel", plot_name)
+        
+        os.makedirs(os.path.join("cnnModel", "model_plot"), exist_ok=True)
         tf.keras.utils.plot_model(BreastCancerModelDetection.model, to_file=dot_img_file, show_shapes=True)
         
         test_acc = BreastCancerModelDetection.history_test.pop()
@@ -252,18 +228,41 @@ class BreastCancerModelDetection(models.Model):
             try:
                 #turn img to np.array
                 np_predict = BreastCancerModelDetection.to_numpy(pathOfImg)
-                # predict via the np array
                 
+                # predict via the np array
                 prediction_arr = BreastCancerModelDetection.model.predict(np_predict)
                
+                # Get the predicted class (via the index at which the max value is) from the prediction (meaning the final class predicted)
                 predicted_class = np.argmax(prediction_arr)
+                print(prediction_arr)
                 
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img
-                return predicted_class
+            
+                # Create lime explainer
+                explainer = lime_image.LimeImageExplainer(random_state=42)
+                
+                # Resize image and turn it into a numpy array
+                image = tf.keras.preprocessing.image.load_img(pathOfImg, target_size=(256, 256))
+                input_arr = tf.keras.preprocessing.image.img_to_array(image)
+                
+                # Exlpain instance via predict image
+                explanation = explainer.explain_instance(
+                                input_arr, 
+                                BreastCancerModelDetection.model.predict)
+
+                # Return original image and mask from the predicited class
+                image, mask = explanation.get_image_and_mask(predicted_class, 
+                                                            hide_rest=False)
+                
+                # Normalize image, convert to range between 0, 255 then turn into an integer then into a PIL image
+                # mark_boundaries just allows us to see where the model has marked its prediction
+                finalImage = Image.fromarray((mark_boundaries(image, mask) * 255).astype(np.uint8))
+                
+                # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img and mask for explanation
+                return predicted_class, finalImage, prediction_arr
+            except FileNotFoundError:
+                print(f"File not found at {pathOfImg}")
             except FileNotFoundError as error:
                 raise FileNotFoundError(f"File not found at {pathOfImg}") from error
             except TypeError as error:
                 raise TypeError(f"File not found at {pathOfImg}") from error
-                
-    
-

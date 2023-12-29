@@ -17,7 +17,7 @@ class modelTests(unittest.TestCase):
 
         # Create list of expected layers
         expectedLayers = [
-            Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 1)),
+            Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)),
             MaxPooling2D((2, 2)),
             Dropout(0.25),
             Conv2D(64, (3, 3), activation='relu'),

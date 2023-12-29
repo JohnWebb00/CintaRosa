@@ -24,6 +24,7 @@ import zipfile
 from django.http import JsonResponse
 import re
 from django.utils import timezone
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Create gloabl model and load current h5 weights on model
 model = BreastCancerModelDetection()
@@ -37,12 +38,14 @@ isCurrentlyUsed = ML_Model.objects.filter(currentlyUsed=True).first()
 if(isCurrentlyUsed is not None):
     #set the model version number to the id of the active model
     model.versionInt = isCurrentlyUsed.ml_model_id
+    
+    # Once model version number is updated by fetching the currentlyUsed model from db
+    # We create the model again by the specified model version
+    model.createModel()
 else:
-    print("No model is currently selected for use")
+    print("Model has not been trained, please train the model")
+        
 
-# Once model version number is updated by fetching the currentlyUsed model from db
-# We create the model again by the specified model version
-model.createModel()
 
 def homePage(request):
     context = {
@@ -56,6 +59,7 @@ def registerSuccess(request):
     }
     return render(request, 'registerSuccess.html', context)
 
+@staff_member_required
 def adminDashboard(request):
     currentModel = None
     modelList = []
@@ -271,7 +275,6 @@ def uploadImage(request):
     try:
         image_uploaded = request.FILES.get(['uploadButton'])
         image_url = os.path.join(settings.MEDIA_URL, os.path.basename(image_uploaded.name))
-
         # Return prediction
         context = {
             'current': 'predictionPage',
@@ -455,9 +458,11 @@ def handle_uploaded_image(request):
 
     # Get user id and store it into prediction table
     predictiondata.user = User.objects.get(userId = request.POST['userId'])
-    print(predictiondata.user)
 
     if request.method == "POST":  
+        if(model.model is None):
+            response = JsonResponse({'error_model404': 'Model is not initialized, contact Admin'})
+            return response
 
         # Get the image and store it in a variable  
         myImage = request.FILES.get('predictionFile')
@@ -481,7 +486,20 @@ def handle_uploaded_image(request):
         predictiondata.beforeTimestamp = datetime.datetime.now() # gets current time before prediction
  
         # Use model.predict function of the CNN model and store the result
-        result = model.predict(image_dir)
+        result, xaiPict, prediction_arr = model.predict(image_dir)
+        
+        # Turn prediction Arr to percentage floats - shown in explainable AI to show the percentage of predicition for each label
+        prediction_arr[0] = float(prediction_arr[0]) * 100
+        prediction_arr[1] = float(prediction_arr[1]) * 100
+        prediction_arr[2] = float(prediction_arr[2]) * 100
+    
+        # save image inorder to serve it for frontend
+        xaiPict_name = f"explainable-{fileName}.png"
+        xaiPict_path = os.path.join(settings.MEDIA_ROOT, xaiPict_name)
+
+        xaiPict.save(xaiPict_path)
+                
+        # Get path of explainalble AI to return        
 
         # Result gets saved in the database
         predictiondata.result = result
@@ -504,11 +522,16 @@ def handle_uploaded_image(request):
         # Remove temp image (image will still be saved in media folder)
         fs.delete(fileName)
 
+    # define path required to load image in frontend
+    xaiPict_name_path = "../media/" + xaiPict_name
+    print(xaiPict_name_path)
     # Send the predicted result, userId and html page as a context to the json response
     context = {
         'current': 'predictionPage',
         'predictionResult': predictionText, 
-        'userId': request.POST['userId']
+        'userId': request.POST['userId'],
+        'xaiPicture': xaiPict_name_path,
+        'predictionsArr': prediction_arr
     }
 
     response = JsonResponse(context)
