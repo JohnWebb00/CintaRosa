@@ -22,6 +22,7 @@ Revolutionary breast cancer detection online.
 - [Project Structure (For Developers)](#project-structure-for-developers)
   - [Directory Layout](#directory-layout)
   - [Database Structure](#database-structure)
+  - [Adding Images to the Project](#adding-images-to-the-project)
 
 - [Deployment](#deployment)
   - [Prerequisites](#prerequisites)
@@ -165,7 +166,7 @@ If you're using Django, perform the database migrations:
 3. On the prediction page, click on the `choose file` to upload your ultrasonic picture of your breast (.png) and the click on `show result` to see the result
 ![predictionPage](screenshots/prediction-page.png)
 4. On the user dashboard page, you can view the upload history of your images, including associated date and corresponding results
-![userDashboard](screenshots/screenshots/user-dashboard.png)
+![userDashboard](screenshots/user-dashboard.png)
 ![userDashboardPrediction](screenshots/user-dashboard-predictions.png)
 Clicking on the pink box on the left side of the page will navigate you to the prediction page, allowing you to upload additional images
 
@@ -195,6 +196,14 @@ The project primarily comprises two components: cnnModel, responsible for design
 ### Database Structure
 In the image provided, you will discover our database design, illustrating the relationships between entities. This offers a comprehensive overview of the project.
 <img src="screenshots/db.png" alt="Database" width="550"/>
+
+
+<a name="adding-images-to-the-project"></a>
+
+### Adding Images to the Project
+1. Go to our [Google Drive](https://drive.google.com/drive/folders/10m5zkHGoLr3v_EmpmY7T0PBylmnQU8bP?usp=drive_link) and download `kaggle_image_data.zip` inside **kaggle_image_data** folder
+2. Navigate to the project and create a folder named **kaggle_image_data** within the **projectOne > cnnModel** directory
+3. Extract the contents of the zip file. Upon extraction, you will find three distinct directories: Malignant, Benign, Normal. Move these directories into the folder `kaggle_image_data` recently established within `projectOne > cnnModel`
 
 <a name="deployment"></a>
 
