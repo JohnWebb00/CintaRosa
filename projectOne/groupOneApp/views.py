@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 import datetime
 import os
 import tempfile
@@ -310,27 +311,38 @@ def trainModelNew(request):
 def selectActiveModel(request):
     data = request.POST
     #save the data of the model name from the body of the ajax script
-    fullName = data["modelFullName"]
-    #split the model name to extract the model version number
-    modelNumber = int(re.search(r'\d+', fullName).group())
+    if data is None:
+        return HttpResponse("Invalid POST request", status=400)
+    
+    try:
+        fullName = data["modelFullName"]
+        modelNumber = int(re.search(r'\d+', fullName).group())
+    except (KeyError, ValueError, AttributeError):
+        return HttpResponse("Invalid modelFullName format", status=400)
+
     #set the model version number to the newly activated model version number
     model.versionInt = modelNumber
     #recreate the active model 
     model.createModel()
-    
-    #query the current active model
-    oldActiveModel = ML_Model.objects.get(currentlyUsed=True)
-    
-    #set its active status to false and save
-    oldActiveModel.currentlyUsed = False
-    oldActiveModel.save()
-    
-    #find the desired model to be activated by id
-    newActiveModel = ML_Model.objects.get(ml_model_id=modelNumber)
-    
-    #Set the active status of the model to be true and save
-    newActiveModel.currentlyUsed = True
-    newActiveModel.save()
+        
+    try:
+        #query the current active model
+        oldActiveModel = ML_Model.objects.get(currentlyUsed=True)
+        
+        #set its active status to false and save
+        oldActiveModel.currentlyUsed = False
+        oldActiveModel.save()
+        
+        #find the desired model to be activated by id
+        #TODO write test to check if the ID exists
+        newActiveModel = ML_Model.objects.get(ml_model_id=modelNumber)
+        
+        #Set the active status of the model to be true and save
+        newActiveModel.currentlyUsed = True
+        newActiveModel.save()
+    except ML_Model.DoesNotExist:
+        return HttpResponse(f"Model with ID {modelNumber} does not exist", status=404)
+
 
     return HttpResponse("/adminDashboard/") 
 
