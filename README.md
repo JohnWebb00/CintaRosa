@@ -160,19 +160,20 @@ If you're using Django, perform the database migrations:
 
 1. Head over to our [website](http://34.38.29.191/)
 2. On the main page click on LOGIN button if you already have an account, otherwise REGISTER yourself
-<img src="screenshots/home-page.png" alt="homePage" width="600"/>
-<img src="screenshots/user-login.png" alt="userLogin" width="600"/>
+![homePage](screenshots/home-page.png)
+![userLogin](screenshots/user-login.png)
 3. On the prediction page, click on the `choose file` to upload your ultrasonic picture of your breast (.png) and the click on `show result` to see the result
-<img src="screenshots/prediction-page.png" alt="predictionPage" width="600"/>
+![predictionPage](screenshots/prediction-page.png)
 4. On the user dashboard page, you can view the upload history of your images, including associated date and corresponding results
-<img src="screenshots/user-dashboard.png" alt="userDashboard" width="600"/>
-<img src="screenshots/user-dashboard-predictions.png" alt="userDashboardPrediction" width="600"/>
+![userDashboard](screenshots/screenshots/user-dashboard.png)
+![userDashboardPrediction](screenshots/user-dashboard-predictions.png)
 Clicking on the pink box on the left side of the page will navigate you to the prediction page, allowing you to upload additional images
 
 <a name="how-to-use-the-website-for-administrators"></a>
 #### How to use the website (For administrators)
 On the admin dashboard page, administrators have three options that contribute to model retraining, ultimately enhancing model accuracy
-<img src="screenshots/admin-dashboard.png" alt="adminDashboard" width="600"/>
+![adminDashboard](screenshots/admin-dashboard.png)
+
 
 1. **Upload image(s):** On the left side, you have the option to upload images. Images can be uploaded either in batches or as individual files. If you choose to upload a batch of images, they should be in the form of zip files. For single-image uploads, ensure the image is in the PNG file format
 
@@ -187,7 +188,7 @@ On the admin dashboard page, administrators have three options that contribute t
 # Project Structure (For Developers)
 ### Directory Layout
 The project primarily comprises two components: cnnModel, responsible for designing the model and handling training and prediction, and groupOneApp, where the database structure, frontend, and backend of the website are defined.
-<img src="screenshots/directory-structure.png" alt="directoryStructure" width="300"/>
+![directoryStructure](screenshots/directory-structure-2.png)
 
 <a name="database-structure"></a>
 
