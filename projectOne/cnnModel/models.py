@@ -53,7 +53,7 @@ class BreastCancerModelDetection(models.Model):
         # if the image is an image, dont need to pass string
         img1 = image_path
         
-        if image_path is None:
+        if os.path.exists(image_path):
             raise TypeError(f"File not found at {image_path}")
         
         # It ensures image_path is a string

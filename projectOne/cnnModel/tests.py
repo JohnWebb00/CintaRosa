@@ -49,10 +49,11 @@ class modelTests(unittest.TestCase):
         self.assertEqual(BreastCancerModelDetection.model.optimizer.get_config(), expectedOptimizer.get_config())
         self.assertEqual(BreastCancerModelDetection.model.loss, expectedLoss)
         
-        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
+        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{new_version}.h5")
+        finalPath = os.path.join("cnnModel", path)
 
-        if os.path.exists(path):
-            os.remove(path)
+        if os.path.exists(finalPath):
+            os.remove(finalPath)
             
     def test_prepare_image_data_not_none(self):
         #Assign data path to use as input for the prepare_image_data function
@@ -91,9 +92,6 @@ class modelTests(unittest.TestCase):
 
         path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
         
-        print(f"Path: {path}")
-        print(f"finalPath: {finalPath}")
-        print(f"heatmapPath: {heatmapPath}")
 
         if os.path.exists(path):
             os.remove(path)
