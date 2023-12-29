@@ -31,8 +31,9 @@ MODEL_VERSION_INT = 1
 # CNNMODEL.object.filter(deployed=True) --> the current deployed model --> MODEL_VERSION trimmed file path
 
 physical_devices = tf.config.list_physical_devices('GPU') 
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
-
+if(len(physical_devices) > 0):
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    
 class BreastCancerModelDetection(models.Model):
 
     model = None # Class variable to store the model
