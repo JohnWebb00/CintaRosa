@@ -80,7 +80,7 @@ class modelTests(unittest.TestCase):
         self.assertTrue(isinstance(test_acc, float))  
         self.assertTrue(isinstance(val_acc, float)) 
         self.assertTrue(finalPath.startswith("cnnModel/models/"))  
-        self.assertTrue(heatmapPath.startswith("cnnModel/heatMap/"))
+        self.assertTrue(heatmapPath.startswith("media/"))
 
         # Cleanup heatmap and model
         if os.path.exists(finalPath):
@@ -90,13 +90,14 @@ class modelTests(unittest.TestCase):
             os.remove(heatmapPath)
 
         path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
+        finalPath = os.path.join("cnnModel", path)
         
         print(f"Path: {path}")
         print(f"finalPath: {finalPath}")
         print(f"heatmapPath: {heatmapPath}")
 
-        if os.path.exists(path):
-            os.remove(path)
+        if os.path.exists(finalPath):
+            os.remove(finalPath)
         
     def test_train_breast_cancer_model_no_intialized_model(self):
         #Save current model
