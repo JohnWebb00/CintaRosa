@@ -489,9 +489,9 @@ def handle_uploaded_image(request):
         result, xaiPict, prediction_arr = model.predict(image_dir)
         
         # Turn prediction Arr to percentage floats - shown in explainable AI to show the percentage of predicition for each label
-        prediction_arr[0] = float(prediction_arr[0]) * 100
-        prediction_arr[1] = float(prediction_arr[1]) * 100
-        prediction_arr[2] = float(prediction_arr[2]) * 100
+        prediction_arr[0][0] = (prediction_arr[0][0]) * 100
+        prediction_arr[0][1] = (prediction_arr[0][1]) * 100
+        prediction_arr[0][2] = (prediction_arr[0][2]) * 100
     
         # save image inorder to serve it for frontend
         xaiPict_name = f"explainable-{fileName}.png"
@@ -531,7 +531,7 @@ def handle_uploaded_image(request):
         'predictionResult': predictionText, 
         'userId': request.POST['userId'],
         'xaiPicture': xaiPict_name_path,
-        'predictionsArr': prediction_arr
+        'predictionsArr': prediction_arr.tolist()
     }
 
     response = JsonResponse(context)

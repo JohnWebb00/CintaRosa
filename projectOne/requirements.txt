@@ -17,6 +17,7 @@ pandas
 matplotlib
 eli5
 pydot
+graphviz
 tensorflow
 opencv-python
 

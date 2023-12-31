@@ -81,18 +81,27 @@ class BreastCancerModelDetection(models.Model):
     def prepare_image_data(dataPath):
 
         # Read datasets
-        data = tf.keras.utils.image_dataset_from_directory(dataPath, label_mode='int') #, color_mode="grayscale")
+        data = tf.keras.utils.image_dataset_from_directory(dataPath, batch_size=32, label_mode='int') #, color_mode="grayscale")
         data = data.map(lambda x, y: (x / 255, y))
 
         # calculate train, validation, test size via 70/20/10 split
         train_size = int(len(data) * .7)
         validation_size = int(len(data) * .2) + 1
         test_size = int(len(data) * .1) + 1
+        
+        # shuffle the dataset to prevent overfitting
+        # The buffer size of 1600 ensures perfect shuffling 
+        data.shuffle(1600, reshuffle_each_iteration=True)
 
         # Take portion of data from total dataset
         train_data = data.take(train_size)
         validation_data = data.skip(train_size).take(validation_size)
         test_data = data.skip(train_size + validation_size).take(test_size)
+        
+        # shuffle individual datasets as well
+        train_data.shuffle(train_size + 10)
+        validation_data.shuffle(validation_size + 10)
+        test_data.shuffle(test_size + 10)
         
         return train_data, validation_data, test_data
 
@@ -118,6 +127,7 @@ class BreastCancerModelDetection(models.Model):
         
         BreastCancerModelDetection.model.add(Conv2D(256, (3, 3), activation='relu'))
         BreastCancerModelDetection.model.add(MaxPooling2D((2, 2)))
+        BreastCancerModelDetection.model.add(Dropout(0.25))  # Dropout layer
 
         # Flatten layer
         BreastCancerModelDetection.model.add(Flatten())
