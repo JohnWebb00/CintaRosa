@@ -170,7 +170,11 @@ If you're using Django, perform the database migrations:
 ![homePage](screenshots/home-page.png)
 ![userLogin](screenshots/user-login.png)
 3. On the prediction page, click on the `choose file` to upload your ultrasonic picture of your breast (.png) and the click on `show result` to see the result
-![predictionPage](screenshots/prediction-page.png)
+![predictionPage](screenshots/prediction-page-2.png)
+![xai](screenshots/xai.png)
+Our website provides Explainable AI, enhancing the clarity of prediction outcomes for a deeper understanding of situations. This involves presenting an array with three distinct classifications. Our objective is to elucidate the decision-making process of the model, ensuring that each prediction is accompanied by an explanation.
+As seen in the displayed image, the highlighted yellow area indicates the prediction identified as malignant (High Risk).
+
 4. On the user dashboard page, you can view the upload history of your images, including associated date and corresponding results
 ![userDashboard](screenshots/user-dashboard.png)
 ![userDashboardPrediction](screenshots/user-dashboard-predictions.png)
@@ -178,9 +182,8 @@ Clicking on the pink box on the left side of the page will navigate you to the p
 
 <a name="how-to-use-the-website-for-administrators"></a>
 #### How to use the website (For administrators)
-On the admin dashboard page, administrators have three options that contribute to model retraining, ultimately enhancing model accuracy
-![adminDashboard](screenshots/admin-dashboard.png)
-
+On the admin dashboard page, administrators have three options that contribute to model retraining, ultimately enhancing model accuracy. Additionally, the administrator can choose the model to operate with.
+![adminDashboard2](screenshots/admin-dashboard-2.png)
 
 1. **Upload image(s):** On the left side, you have the option to upload images. Images can be uploaded either in batches or as individual files. If you choose to upload a batch of images, they should be in the form of zip files. For single-image uploads, ensure the image is in the PNG file format
 
@@ -294,7 +297,7 @@ Another way to re-deploy is to create a tag with the schema: v1 where the number
 # Support
 If you have any technical or general questions, suggestions, or concerns about the project, feel free to contact the project developers via email.
 - AGATA CIUCHTA - gusciuag@student.gu.se
-- BARDIA FOROORAGHI - gusforoba@student.gu.se (Readme author)
+- BARDIA FOROORAGHI - gusforoba@student.gu.se
 - GEORG ZSOLNAI - guszsoge@student.gu.se 
 - JOHN CHRISTOPHER WEBB - guswebbjo@student.gu.se
 - SEJAL ULHAS KANASKAR - guskanase@student.gu.se
