@@ -207,7 +207,7 @@ In the image provided, you will discover our database design, illustrating the r
 <a name="adding-images-to-the-project"></a>
 
 ### Adding Images to the Project
-1. Go to our [Google Drive](https://drive.google.com/drive/folders/10m5zkHGoLr3v_EmpmY7T0PBylmnQU8bP?usp=drive_link) and download `kaggle_image_data.zip` inside **kaggle_image_data** folder
+1. Go to our [Google Drive](https://drive.google.com/file/d/1aP2bbTTaS9FGwpb1J3sg8QR0LNmBdwK8/view?usp=sharing) and download `kaggle_image_data.zip` inside **kaggle_image_data** folder
 2. Navigate to the project and create a folder named **kaggle_image_data** within the **projectOne > cnnModel** directory
 3. Extract the contents of the zip file. Upon extraction, you will find three distinct directories: Malignant, Benign, Normal. Move these directories into the folder `kaggle_image_data` recently established within `projectOne > cnnModel`
 
