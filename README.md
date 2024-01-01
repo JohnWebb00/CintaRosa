@@ -1,5 +1,11 @@
 # DIT826-group1-part2
+
+
+
+
+[comment]: <> (===============================================)
 [comment]: <> (author: bardiaf - gusforoba@student.gu.se)
+[comment]: <> (===============================================)
 
 # CINTA ROSA <img src="screenshots/breast-cancer-awareness.png" alt="Image" width="40"/>
 
@@ -288,7 +294,7 @@ Another way to re-deploy is to create a tag with the schema: v1 where the number
 # Support
 If you have any technical or general questions, suggestions, or concerns about the project, feel free to contact the project developers via email.
 - AGATA CIUCHTA - gusciuag@student.gu.se
-- BARDIA FOROORAGHI - gusforoba@student.gu.se 
+- BARDIA FOROORAGHI - gusforoba@student.gu.se (Readme author)
 - GEORG ZSOLNAI - guszsoge@student.gu.se 
 - JOHN CHRISTOPHER WEBB - guswebbjo@student.gu.se
 - SEJAL ULHAS KANASKAR - guskanase@student.gu.se
