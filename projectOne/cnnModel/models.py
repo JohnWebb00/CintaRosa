@@ -175,7 +175,7 @@ class BreastCancerModelDetection(models.Model):
         BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=curr_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
 
         # evaluate the model
-        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
+        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data, batch_size=curr_batch_size)
         
         # Checks current version then returns with new version
         new_version = BreastCancerModelDetection.checkCurrVersion()
@@ -190,7 +190,7 @@ class BreastCancerModelDetection(models.Model):
         y_labels = np.concatenate([y for x, y in test_data], axis=0)
     
         # Find predicted classes to compare with actual labels
-        predictions = BreastCancerModelDetection.model.predict(test_data)
+        predictions = BreastCancerModelDetection.model.predict(test_data, verbose='auto', batch_size=curr_batch_size)
         pred_classes = np.argmax(predictions, axis=1)
         
         # Create confusion matrix based on the predicted classes and their actual values
