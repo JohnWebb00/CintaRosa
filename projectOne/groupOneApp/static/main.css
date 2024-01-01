@@ -324,7 +324,6 @@ font-weight: bolder;
 
 .explainableAI{
   background-color: white;
-  width: 70rem;
   color: black;
   font-size: medium;
   font-family: 'Saira Condensed';
@@ -332,15 +331,15 @@ font-weight: bolder;
   border-style: hidden;
   border-radius:  0.625rem;
   padding-bottom: 4rem;
-  display: flex;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
   flex-direction: column;
   gap: 1rem;
-  justify-content: center;
   align-items: center;
 }
 
 .xaiBody {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: 3rem;
 }

@@ -32,6 +32,7 @@
 <div class="d-flex justify-content-center custom-padding1">
   <button type="button" class="btn btn-light predicButton" id="predictButton">
     Show result
+    <div id="spinnerPredict" style="display: none; padding-right: 0.25rem;" class="spinner-border text-success" role="status">
   </button>
 </div>
 <hr class="hr" />
@@ -43,25 +44,39 @@
 <div class="bottomSection" style="gap: 4rem">
   <div class="card explainableAI">
     <h2>Explainable AI</h2>
-    <p style="text-align: center;">To explain our prediction we use a popular Explainable AI library that shows how our ML model made the decision to give the current prediciton. The technique highlights the pixels that our model highlights as strong indicators for the current prediction and as our model process the images, the LIME functionality keeps track of these indicators to show in the shown image.  </p>
+    <p style="text-align: center; padding: 0.5rem 5rem 0.5rem 5rem;">To explain our prediction we use a popular Explainable AI library called LIME, that shows how our ML model made the decision to give the current prediciton. The library colors in the pixels that our model highlights as strong indicators for the current prediction. The model also outputs an array of three percentages which represent the outcomes of the different classifcations. In combination, our goal is to show how the model made the decision and that each predicition can be associated with an explanation to help expose the prediciton made. </p>
     <div class="xaiBody">
-      <div id="xaiDiv"/>
       <div class="TextWithPredTable">
-        {% if predictionResult == 0 %} <!--If the image is benign-->
-        <span>Our model shows that the current image you uploaded shows that there are indications that there is a small growth detected which shows low amounts of abnormalities in shape </span>
-        {% elif predictionResult == 1 %} <!--If the image is malignant-->
-        <span>Malignant</span>
-        {% elif predictionResult == 2 %} <!--If the image is normal-->
-        <span>The image uploaded, based on our Model, shows that there is no detected growths.</span>
-        {% endif %}
-        
         <h3>Table of predicition</h3>
-        {% for pred in predictionsArr %} <!--List of prediciton percentages-->
-        {{ pred }}
-        {% endfor %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Classification</th>
+              <th scope="col">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>            
+            <tr>
+              <td>Benign</td>
+              <td id="benignTb">Nan</td>
+            </tr>
+            <tr>
+              <td>Malignant</td>
+              <td id="malignantTb">Nan</td>
+            </tr>
+            <tr>
+              <td>Normal</td>
+              <td id="normalTb">Nan</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <div id="xaiDiv"/>
     </div>
   </div>
+  <span id="benignText" style="display: none; text-align: center; padding: 0.5rem 5rem 0.5rem 5rem;">Our model shows that the current image uploaded indicates that there is a small growth detected which shows low amounts of abnormalities in shape. The highlighted areas were highlighted based on the prediciton that the image shows a medium risk of cancer, please seek your closest medical professional if you are unsure or would like to get a real diagnosis. </span>
+  <span id="malignantText" style="display: none; text-align: center; padding: 0.5rem 5rem 0.5rem 5rem;">Our model shows that the current image uploaded indicates a growth whose shape is distinctly abnormal and not uniform in size. This is a sign that there is a high risk of cancer, please seek your closest medical professional if you are unsure or would like to get a real diagnosis.</span>
+  <span id="normalText" style="display: none; text-align: center; padding: 0.5rem 5rem 0.5rem 5rem;" >Our model shows that the current image uploaded indicates no distinguishable grow. This a sign that there is no/low risk of cancer, however, it is always best to check with a medical professional if you want a real diagnosis</span>
 </div>
 
 <script>
@@ -111,6 +126,9 @@
   const csrftoken = getCookie("csrftoken");
   $(document).ready(function () {
     $("#predictButton").click(function () {
+      
+      $("#predictButton").attr("disabled", true);
+      $("#spinnerPredict").show();
       var userId = getCookie("userId");
       var fileInput = document.querySelector("#uploadedImageFile");
 
@@ -136,6 +154,19 @@
 
           alert("Your prediction is ready!");
 
+          $("#predictButton").attr("disabled", false);
+          $("#spinnerPredict").hide();
+          
+          //conditionally render the text
+          if(response.predictionResultINT == 0) {
+            $("#benignText").show()
+          }else if(response.predictionResultINT == 1){
+            $("#malignantText").show()
+          }else if(response.predictionResultINT == 2){
+            $("#normalText").show()
+          }
+
+
           var resultColor;
 
           if (response.predictionResult.includes("High Risk")) {
@@ -159,7 +190,19 @@
             response.xaiPicture +
             ' " alt="Selected Image" width="200rem" height="200rem">';
  
-          // Handle the response here
+          // Populate Table
+          console.log(response.predictionsArr)
+          console.log(typeof response.predictionResultINT)
+
+          var benignTb = document.getElementById("benignTb")
+          var malignantTb = document.getElementById("malignantTb")
+          var normalTb = document.getElementById("normalTb")
+
+          benignTb.innerHTML  = response.predictionsArr[0].toFixed(4)
+          malignantTb.innerHTML  = response.predictionsArr[1].toFixed(4)
+          normalTb.innerHTML  = response.predictionsArr[2].toFixed(4)
+
+          //123.456
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
           alert("Error: " + errorThrown);

@@ -240,7 +240,6 @@ class BreastCancerModelDetection(models.Model):
                
                 # Get the predicted class (via the index at which the max value is) from the prediction (meaning the final class predicted)
                 predicted_class = np.argmax(prediction_arr)
-                print(prediction_arr)
                 
                 # Create lime explainer
                 explainer = lime_image.LimeImageExplainer(random_state=42)

@@ -524,14 +524,14 @@ def handle_uploaded_image(request):
 
     # define path required to load image in frontend
     xaiPict_name_path = "../media/" + xaiPict_name
-    print(xaiPict_name_path)
     # Send the predicted result, userId and html page as a context to the json response
     context = {
         'current': 'predictionPage',
+        'predictionResultINT': str(result),
         'predictionResult': predictionText, 
         'userId': request.POST['userId'],
         'xaiPicture': xaiPict_name_path,
-        'predictionsArr': prediction_arr.tolist()
+        'predictionsArr': prediction_arr[0].tolist()
     }
 
     response = JsonResponse(context)
