@@ -260,8 +260,6 @@ class BreastCancerModelDetection(models.Model):
                 
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img and mask for explanation
                 return predicted_class, finalImage, prediction_arr
-            except FileNotFoundError:
-                print(f"File not found at {pathOfImg}")
             except FileNotFoundError as error:
                 raise FileNotFoundError(f"File not found at {pathOfImg}") from error
             except TypeError as error:
