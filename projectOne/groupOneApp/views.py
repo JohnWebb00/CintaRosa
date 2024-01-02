@@ -478,7 +478,7 @@ def handle_uploaded_image(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid image URL'})
   
         # create filename with date uploaded
-        fileName = f"pngtemp-{datetime.datetime.now()}."
+        fileName = f"temp-{datetime.datetime.now()}.png"
 
         fs = FileSystemStorage()
         
