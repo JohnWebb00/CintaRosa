@@ -274,20 +274,6 @@ padding-left: 3rem;
 color: black;
 }
 
-.explainableAI{
-background-color: white;
-width: 25rem;
-height: 10rem;
-color: black;
-text-transform: uppercase; 
-text-align: center;
-font-size: medium;
-font-family: 'Saira Condensed';
-letter-spacing: 0.125rem;
-border-style: hidden;
-border-radius:  0.625rem;
-}
-
 .uploadCard{
 background-color: white;
 width: 20rem;
@@ -326,4 +312,34 @@ font-weight: bolder;
   font-size: x-large;
   font-family: 'Helvetica';
   font-weight: bolder;
+}
+
+.bottomSection{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.explainableAI{
+  background-color: white;
+  color: black;
+  font-size: medium;
+  font-family: 'Saira Condensed';
+  letter-spacing: 0.125rem;
+  border-style: hidden;
+  border-radius:  0.625rem;
+  padding-bottom: 4rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.xaiBody {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
 }

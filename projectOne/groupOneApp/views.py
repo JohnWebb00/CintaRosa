@@ -43,8 +43,8 @@ if(isCurrentlyUsed is not None):
     # We create the model again by the specified model version
     model.createModel()
 else:
-    # when no model exists we cannot predict, so 'contact Admin' is shown to users
-    print("No model is currently selected for use")
+    print("Model has not been trained, please train the model")
+        
 
 
 def homePage(request):
@@ -275,7 +275,6 @@ def uploadImage(request):
     try:
         image_uploaded = request.FILES.get(['uploadButton'])
         image_url = os.path.join(settings.MEDIA_URL, os.path.basename(image_uploaded.name))
-
         # Return prediction
         context = {
             'current': 'predictionPage',
@@ -459,7 +458,6 @@ def handle_uploaded_image(request):
 
     # Get user id and store it into prediction table
     predictiondata.user = User.objects.get(userId = request.POST['userId'])
-    print(predictiondata.user)
 
     if request.method == "POST":  
         if(model.model is None):
@@ -488,7 +486,20 @@ def handle_uploaded_image(request):
         predictiondata.beforeTimestamp = datetime.datetime.now() # gets current time before prediction
  
         # Use model.predict function of the CNN model and store the result
-        result = model.predict(image_dir)
+        result, xaiPict, prediction_arr = model.predict(image_dir)
+        
+        # Turn prediction Arr to percentage floats - shown in explainable AI to show the percentage of predicition for each label
+        prediction_arr[0][0] = (prediction_arr[0][0]) * 100
+        prediction_arr[0][1] = (prediction_arr[0][1]) * 100
+        prediction_arr[0][2] = (prediction_arr[0][2]) * 100
+    
+        # save image inorder to serve it for frontend
+        xaiPict_name = f"explainable-{fileName}.png"
+        xaiPict_path = os.path.join(settings.MEDIA_ROOT, xaiPict_name)
+
+        xaiPict.save(xaiPict_path)
+                
+        # Get path of explainalble AI to return        
 
         # Result gets saved in the database
         predictiondata.result = result
@@ -511,11 +522,16 @@ def handle_uploaded_image(request):
         # Remove temp image (image will still be saved in media folder)
         fs.delete(fileName)
 
+    # define path required to load image in frontend
+    xaiPict_name_path = "../media/" + xaiPict_name
     # Send the predicted result, userId and html page as a context to the json response
     context = {
         'current': 'predictionPage',
+        'predictionResultINT': str(result),
         'predictionResult': predictionText, 
-        'userId': request.POST['userId']
+        'userId': request.POST['userId'],
+        'xaiPicture': xaiPict_name_path,
+        'predictionsArr': prediction_arr[0].tolist()
     }
 
     response = JsonResponse(context)

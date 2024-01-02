@@ -13,7 +13,7 @@ spec:
         app: cinta-rosa-app
     spec:
       nodeSelector:
-        cloud.google.com/gke-accelerator: nvidia-tesla-t4
+        cloud.google.com/gke-accelerator: "nvidia-tesla-t4"
       containers:
       - name: cinta-rosa-app
         image: registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest
@@ -27,6 +27,9 @@ spec:
         resources:
           limits:
             nvidia.com/gpu: "1"
+          requests:
+            cpu: "0.5"
+            memory: "2Gi"
       imagePullSecrets:
         - name: app-secret
 
