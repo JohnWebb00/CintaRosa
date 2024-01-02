@@ -1,13 +1,18 @@
 import os
 import unittest
-from django.test import TestCase, Client
-from django.urls import reverse
-from groupOneApp.views import uploadBenignImages
+from unittest import mock
 from django.test import RequestFactory
-from groupOneApp.views import selectActiveModel 
-from unittest.mock import MagicMock, Mock, patch
+from requests import request
+from groupOneApp.views import handle_uploaded_image, selectActiveModel 
+from unittest.mock import MagicMock, patch
 from django.http import HttpResponse
-from groupOneApp.models import ML_Model
+from groupOneApp.models import ML_Model, Prediction
+from groupOneApp.models import User
+import random
+from django.core.files.uploadedfile import SimpleUploadedFile
+from cnnModel.models import BreastCancerModelDetection
+from django.core.files import File
+from groupOneApp.models import ImageData
 
 def file_exists(directory, filename):
     # Create the full file path by joining the directory and filename.
@@ -50,7 +55,7 @@ class UploadNormalImagesTestCase(unittest.TestCase):
     # Define a test method 'test_existing_file' to test the existence of an existing file.
     def test_existing_file(self):
         directory = 'cnnModel/kaggle_image_data/normal/'
-        filename = 'normal1.png'
+        filename = 'normal.png'
         # Assert that the file exists in the specified directory.
         self.assertTrue(file_exists(directory, filename), "The file does not exist in the specified directory")
 
@@ -100,7 +105,90 @@ class TestSelectActiveModel(unittest.TestCase):
         # Ensure the 'modelFullName' key is not present in the request data
         self.assertNotIn('modelFullName', request.POST)
  
+# Tests the handle_uploaded_image() function located in views.py
+class HandleUploadedImageTestCase(unittest.TestCase):
     
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(name = 'mockN', surname = 'mockS', email = f'mock{random.randint(0, 10000)}@gmail.com', password = "mockS", birthDate = '2022-12-12', token = 'mockT')
+        
+        file_mock = mock.Mock(spec=File, name='FileMock')
+        file_mock.name = 'test.png'
+        ML_Model.objects.create(img=file_mock, name='123',)
+
+      
+    # Define a test method to test the existence of user Id     
+    def testUserId(self):
+        
+        # Create an instance of a POST request.
+        request = self.factory.post("/upload/", data={'userId': self.user.userId})
+        
+        # Simulate a logged-in user by setting request.user manually.
+        request.user = self.user
+       
+        response = handle_uploaded_image(request)
+    
+        # Checj if user id not empty 
+        self.assertIsNotNone(response, 'Invalid user id.')
+        
+    @patch('models.Image.new', autospec=True)
+    @patch('models.Image.save', autospec=True)
+    def testImage(self, mock_save, mock_new):
+        
+        # Mock the Image.new and Image.save functions
+        mock_new.return_value = MagicMock()
+        mock_save.return_value = None
+
+        # Call the function to create a dummy image
+        imagePath = ImageData("/media", "dummyImage.png")
+
+        # Assert that Image.new and Image.save were called with the correct arguments
+        mock_new.assert_called_once_with('RGB', (100, 100), (255, 255, 255))
+        mock_save.assert_called_once_with("/media/dummyImage.png")
+
+        # Assert that the function returned the correct image path
+        self.assertNotNone(ImageData, "It is empty.") 
+        
+        
+class PrepareImageDataTestCase(unittest.TestCase):
+    def testDataLoaded(self):
+        data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
+        dataPath = str(data_OSPath)
+        try:
+            data = BreastCancerModelDetection.prepare_image_data(dataPath)
+        except(ValueError):
+            self.fail("No images found.")
+        self.assertIsNotNone(data, "No data loaded.")
+        
+    
+    # Define a test method to check if there is enough data to perform splitting into sets
+    def testDataAmout(self):
+        data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
+        dataPath = str(data_OSPath)
+        data = BreastCancerModelDetection.prepare_image_data(dataPath)
+        
+        datasize = int(len(data))
+        self.assertLess(datasize, 500, "Not enough data. Should be more than 500.") 
+        
+    # Define a test method to test if data was splitted accordingly to the principles
+    def testDataSplitted(self):  
+        data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
+        dataPath = str(data_OSPath)
+        #datasize = int(len(data))
+        train_data, validation_data, test_data = BreastCancerModelDetection.prepare_image_data(dataPath)
+
+        datasize = len(list(train_data)) + len(list(validation_data)) + len(list(test_data))
+        # Specify the expected size of data after splitting
+        expected_train_size = int(datasize * 0.7)
+        expected_validation_size = int(datasize * 0.2) + 1
+        expected_test_size = int(datasize * 0.1) + 1
+        
+        # Compare the values using assertEqual
+        self.assertEqual(len(list(train_data)), expected_train_size, "Wrong size of the trainig data set.")
+        self.assertEqual(len(list(validation_data)), expected_validation_size, "Wrong size of the validation data set.")
+        self.assertEqual(len(list(test_data)), expected_test_size, "Wrong size of the test data set.")
+       
+        
 # Check if the script is run as the main program.
 if __name__ == '__main__':
     # Run the test cases using 'unittest.main()'.

@@ -469,7 +469,6 @@ def handle_uploaded_image(request):
 
     # Get user id and store it into prediction table
     predictiondata.user = User.objects.get(userId = request.POST['userId'])
-    print(predictiondata.user)
 
     if request.method == "POST":  
 
@@ -479,7 +478,7 @@ def handle_uploaded_image(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid image URL'})
   
         # create filename with date uploaded
-        fileName = f"temp-{datetime.datetime.now()}.png"
+        fileName = f"pngtemp-{datetime.datetime.now()}."
 
         fs = FileSystemStorage()
         
