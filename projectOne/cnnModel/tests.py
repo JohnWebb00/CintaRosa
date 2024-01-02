@@ -171,9 +171,6 @@ class modelTests(unittest.TestCase):
             self.assertIn("File not found at", str(context.exception))
             
             
-    #ADD array for when changes from branch #8 are added      
-            
-            
     def test_predict_normal(self):
         #Get a random image number from 1 to 133 to get a random image of the 133 normal images
         imgNr = random.randint(1, 133)
