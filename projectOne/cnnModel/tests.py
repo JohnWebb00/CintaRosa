@@ -53,6 +53,7 @@ class modelTests(unittest.TestCase):
         finalPath = os.path.join("cnnModel", path)
 
         if os.path.exists(finalPath):
+            print(f"remove {finalPath}")
             os.remove(finalPath)
             
     def test_prepare_image_data_not_none(self):
@@ -90,11 +91,13 @@ class modelTests(unittest.TestCase):
         
         # Cleanup heatmap and model
         if os.path.exists(finalPath):
+            print(f"remove {finalPath}")
             os.remove(finalPath)
             
         heatmapFullPath = os.path.join("media", heatmapPath)   
          
         if os.path.exists(heatmapFullPath):
+            print(f"remove {heatmapFullPath}")
             os.remove(heatmapFullPath)
         
         modelPath = os.path.join("model_plot", f"model_{BreastCancerModelDetection.versionInt}.png")
@@ -102,14 +105,12 @@ class modelTests(unittest.TestCase):
         
         # cleanup model plot
         if os.path.exists(finalPathPlot):
+            print(f"remove {finalPathPlot}")
             os.remove(finalPathPlot)
         
     def test_train_breast_cancer_model_no_intialized_model(self):
         #Make sure no model is in use
         BreastCancerModelDetection.model = None
-        
-        #Call the function
-        BreastCancerModelDetection.train_breast_cancer_model_detection()
         
         #Call function and assign returned values to variables 
         train_acc, test_acc, val_acc, finalPath, heatmapPath = BreastCancerModelDetection.train_breast_cancer_model_detection()
@@ -128,11 +129,13 @@ class modelTests(unittest.TestCase):
         
         # Cleanup heatmap and model
         if os.path.exists(finalPath):
+            print(f"remove {finalPath}")
             os.remove(finalPath)
             
         heatmapFullPath = os.path.join("media", heatmapPath)   
          
         if os.path.exists(heatmapFullPath):
+            print(f"remove {heatmapFullPath}")
             os.remove(heatmapFullPath)
         
         modelPath = os.path.join("model_plot", f"model_{BreastCancerModelDetection.versionInt}.png")
@@ -140,6 +143,7 @@ class modelTests(unittest.TestCase):
         
         # cleanup model plot
         if os.path.exists(finalPathPlot):
+            print(f"remove {finalPathPlot}")
             os.remove(finalPathPlot)
     
     def test_predict_with_no_model(self):
