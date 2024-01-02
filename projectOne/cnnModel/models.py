@@ -1,3 +1,12 @@
+"""
+Authors:
+- bardiaf - bardiaf@student.chalmers.se
+- zsolnai - georg.zsolnai123@gmail.com
+- sejal - sejal@student.chalmers.se
+
+Usage: groupOneApp/views.py
+"""
+
 from django.db import models
 import numpy as np
 import pandas as pd
@@ -33,6 +42,7 @@ MODEL_VERSION_INT = 1
 physical_devices = tf.config.list_physical_devices('GPU') 
 if(len(physical_devices) > 0):
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    
 class BreastCancerModelDetection(models.Model):
 
     model = None # Class variable to store the model
@@ -85,18 +95,27 @@ class BreastCancerModelDetection(models.Model):
     def prepare_image_data(dataPath):
 
         # Read datasets
-        data = tf.keras.utils.image_dataset_from_directory(dataPath, label_mode='int') #, color_mode="grayscale")
+        data = tf.keras.utils.image_dataset_from_directory(dataPath, batch_size=32, label_mode='int') #, color_mode="grayscale")
         data = data.map(lambda x, y: (x / 255, y))
 
         # calculate train, validation, test size via 70/20/10 split
         train_size = int(len(data) * .7)
         validation_size = int(len(data) * .2) + 1
         test_size = int(len(data) * .1) + 1
+        
+        # shuffle the dataset to prevent overfitting
+        # The buffer size of 1600 ensures perfect shuffling 
+        data.shuffle(1600, reshuffle_each_iteration=True)
 
         # Take portion of data from total dataset
         train_data = data.take(train_size)
         validation_data = data.skip(train_size).take(validation_size)
         test_data = data.skip(train_size + validation_size).take(test_size)
+        
+        # shuffle individual datasets as well
+        train_data.shuffle(train_size + 10)
+        validation_data.shuffle(validation_size + 10)
+        test_data.shuffle(test_size + 10)
         
         return train_data, validation_data, test_data
 
@@ -122,6 +141,7 @@ class BreastCancerModelDetection(models.Model):
         
         BreastCancerModelDetection.model.add(Conv2D(256, (3, 3), activation='relu'))
         BreastCancerModelDetection.model.add(MaxPooling2D((2, 2)))
+        BreastCancerModelDetection.model.add(Dropout(0.25))  # Dropout layer
 
         # Flatten layer
         BreastCancerModelDetection.model.add(Flatten())
@@ -169,7 +189,7 @@ class BreastCancerModelDetection(models.Model):
         BreastCancerModelDetection.history_validate = BreastCancerModelDetection.model.fit(validation_data, batch_size=curr_batch_size, epochs=train_epochs, callbacks=[tensorboard_callback])
 
         # evaluate the model
-        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data)
+        BreastCancerModelDetection.history_test = BreastCancerModelDetection.model.evaluate(test_data, batch_size=curr_batch_size)
         
         # Checks current version then returns with new version
         new_version = BreastCancerModelDetection.checkCurrVersion()
@@ -184,7 +204,7 @@ class BreastCancerModelDetection(models.Model):
         y_labels = np.concatenate([y for x, y in test_data], axis=0)
     
         # Find predicted classes to compare with actual labels
-        predictions = BreastCancerModelDetection.model.predict(test_data)
+        predictions = BreastCancerModelDetection.model.predict(test_data, verbose='auto', batch_size=curr_batch_size)
         pred_classes = np.argmax(predictions, axis=1)
         
         # Create confusion matrix based on the predicted classes and their actual values
@@ -234,7 +254,6 @@ class BreastCancerModelDetection(models.Model):
                
                 # Get the predicted class (via the index at which the max value is) from the prediction (meaning the final class predicted)
                 predicted_class = np.argmax(prediction_arr)
-                print(prediction_arr)
                 
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img
             

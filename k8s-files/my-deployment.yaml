@@ -1,3 +1,10 @@
+"""
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+
+Usage: google cloud deployment
+"""
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

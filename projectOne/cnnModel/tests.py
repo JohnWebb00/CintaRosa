@@ -1,3 +1,10 @@
+"""
+Authors:
+- johnchri - johnchri@student.chalmers.se
+
+Usage: None
+"""
+
 from re import I
 import unittest
 from .models import BreastCancerModelDetection 
@@ -197,5 +204,4 @@ class modelTests(unittest.TestCase):
         
 if __name__ == '__main__':
     unittest.main()
-    
-    
+

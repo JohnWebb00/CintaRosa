@@ -1,3 +1,10 @@
+"""
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+
+Usage: groupOneApp/views.py
+"""
+
 # from projectOne.config.settings import AUTH_PASSWORD_VALIDATORS
 from rest_framework import serializers # Import the serializer class
 from django.contrib.auth import authenticate

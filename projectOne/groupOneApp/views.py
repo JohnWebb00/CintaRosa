@@ -1,3 +1,15 @@
+"""
+Authors:
+- ciuchta - ciuchta@chalmers.se
+- sejal - sejal@student.chalmers.se
+- zsolnai - georg.zsolnai123@gmail.com
+- johnchri - johnchri@student.chalmers.se
+- bardiaf - bardiaf@student.chalmers.se
+
+Usage: groupOneApp/urls.py
+"""
+
+
 import datetime
 import os
 import tempfile
@@ -489,9 +501,9 @@ def handle_uploaded_image(request):
         result, xaiPict, prediction_arr = model.predict(image_dir)
         
         # Turn prediction Arr to percentage floats - shown in explainable AI to show the percentage of predicition for each label
-        prediction_arr[0] = float(prediction_arr[0]) * 100
-        prediction_arr[1] = float(prediction_arr[1]) * 100
-        prediction_arr[2] = float(prediction_arr[2]) * 100
+        prediction_arr[0][0] = (prediction_arr[0][0]) * 100
+        prediction_arr[0][1] = (prediction_arr[0][1]) * 100
+        prediction_arr[0][2] = (prediction_arr[0][2]) * 100
     
         # save image inorder to serve it for frontend
         xaiPict_name = f"explainable-{fileName}.png"
@@ -524,14 +536,14 @@ def handle_uploaded_image(request):
 
     # define path required to load image in frontend
     xaiPict_name_path = "../media/" + xaiPict_name
-    print(xaiPict_name_path)
     # Send the predicted result, userId and html page as a context to the json response
     context = {
         'current': 'predictionPage',
+        'predictionResultINT': str(result),
         'predictionResult': predictionText, 
         'userId': request.POST['userId'],
         'xaiPicture': xaiPict_name_path,
-        'predictionsArr': prediction_arr
+        'predictionsArr': prediction_arr[0].tolist()
     }
 
     response = JsonResponse(context)

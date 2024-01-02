@@ -1,3 +1,10 @@
+### Authors:
+
+# - zsolnai - georg.zsolnai123@gmail.com
+# - johnchri - johnchri@student.chalmers.se
+
+### Usage: project repository pipeline
+
 stages:
   - build
   - deploy

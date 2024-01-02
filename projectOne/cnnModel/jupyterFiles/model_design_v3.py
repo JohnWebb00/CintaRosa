@@ -3,6 +3,13 @@
 
 # In[45]:
 
+"""
+Authors:
+- bardiaf - bardiaf@student.chalmers.se
+- ...
+
+Usage: model prototye version 3
+"""
 
 import keras
 import os
