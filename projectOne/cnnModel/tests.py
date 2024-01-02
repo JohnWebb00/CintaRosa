@@ -73,7 +73,7 @@ class modelTests(unittest.TestCase):
         #Create model to train
         BreastCancerModelDetection.createModel()
         
-        # Can function and assign returned values to variables 
+        #Call function and assign returned values to variables 
         train_acc, test_acc, val_acc, finalPath, heatmapPath = BreastCancerModelDetection.train_breast_cancer_model_detection()
 
         # Assert expected return types and paths
@@ -105,20 +105,42 @@ class modelTests(unittest.TestCase):
             os.remove(finalPathPlot)
         
     def test_train_breast_cancer_model_no_intialized_model(self):
-        #Save current model
-        currentModel = BreastCancerModelDetection.model
-        
-        #Set model to None so that no model is selected
+        #Make sure no model is in use
         BreastCancerModelDetection.model = None
-
-        # Assert that a ValueError is raised with the corresponding message
-        with self.assertRaises(ValueError) as context:
-            BreastCancerModelDetection.train_breast_cancer_model_detection()
-
-        self.assertIn("Model has not been initialized.", str(context.exception))
         
-        #Set model back to the previos model
-        BreastCancerModelDetection.model = currentModel
+        #Call the function
+        BreastCancerModelDetection.train_breast_cancer_model_detection()
+        
+        #Call function and assign returned values to variables 
+        train_acc, test_acc, val_acc, finalPath, heatmapPath = BreastCancerModelDetection.train_breast_cancer_model_detection()
+
+        # Assert expected return types and paths
+        self.assertTrue(isinstance(train_acc, float))  
+        self.assertTrue(isinstance(test_acc, float))  
+        self.assertTrue(isinstance(val_acc, float)) 
+        self.assertTrue(finalPath.startswith("cnnModel/models/"))
+        self.assertTrue(os.path.exists(finalPath)) # Check it exists in folder
+        self.assertTrue(heatmapPath.startswith("breastCancerModel_v")) # Since django looks into the media directory when no absolute path is given, we must check the file existing rather than the folder its in
+        self.assertTrue(os.path.exists(os.path.join("media", heatmapPath))) # Check that the media folder contains image
+        
+        path = os.path.join("models", f"{BreastCancerModelDetection.versionNum}{BreastCancerModelDetection.versionInt}.h5")
+        finalPath = os.path.join("cnnModel", path)
+        
+        # Cleanup heatmap and model
+        if os.path.exists(finalPath):
+            os.remove(finalPath)
+            
+        heatmapFullPath = os.path.join("media", heatmapPath)   
+         
+        if os.path.exists(heatmapFullPath):
+            os.remove(heatmapFullPath)
+        
+        modelPath = os.path.join("model_plot", f"model_{BreastCancerModelDetection.versionInt}.png")
+        finalPathPlot = os.path.join("cnnModel", modelPath)
+        
+        # cleanup model plot
+        if os.path.exists(finalPathPlot):
+            os.remove(finalPathPlot)
     
     def test_predict_with_no_model(self):
         #Save current model
@@ -152,25 +174,25 @@ class modelTests(unittest.TestCase):
         #Get a random image number from 1 to 133 to get a random image of the 133 normal images
         imgNr = random.randint(1, 133)
         #Predict the classifcation of the randomly selected normal image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal ({imgNr}).png")#[0] # return only prediction val
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/normal/normal ({imgNr}).png") # return only prediction val
         #Assert that the image is normal
-        self.assertEqual(classification, 2)
+        self.assertEqual(classification[0], 2)
         
     def test_predict_malignant(self):
         #Get a random image number from 1 to 210 to get a random image of the 210 malignant images
         imgNr = random.randint(1, 210)
         #Predict the classifcation of the randomly selected malignant image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png")#[0] # return only prediction val
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/malignant/malignant ({imgNr}).png") # return only prediction val
         #Assert that the image is malignant 
-        self.assertEqual(classification, 1)
+        self.assertEqual(classification[0], 1)
     
     def test_predict_benign(self):
         #Get a random image number from 1 to 437 to get a random image of the 437 benign images
         imgNr = random.randint(1, 437)
         #Predict the classifcation of the randomly selected benign image
-        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/benign/benign ({imgNr}).png")#[0] # return only prediction val
+        classification = BreastCancerModelDetection.predict(f"cnnModel/kaggle_image_data/benign/benign ({imgNr}).png") # return only prediction val
         #Assert that the image is benign
-        self.assertEqual(classification, 0)
+        self.assertEqual(classification[0], 0)
         
 if __name__ == '__main__':
     unittest.main()
