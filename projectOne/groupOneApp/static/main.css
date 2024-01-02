@@ -1,3 +1,13 @@
+/* 
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+- ciuchta - ciuchta@chalmers.se
+- sejal - sejal@student.chalmers.se
+- johnchri - johnchri@student.chalmers.se
+
+Usage: under templates: adminDashboard.html, base.html, homePage.html, predictionPage.html, userDashboard.html
+*/
+
 body{ 
   border: 0;
   padding: 0;

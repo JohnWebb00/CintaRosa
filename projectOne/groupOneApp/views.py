@@ -1,3 +1,15 @@
+"""
+Authors:
+- ciuchta - ciuchta@chalmers.se
+- sejal - sejal@student.chalmers.se
+- zsolnai - georg.zsolnai123@gmail.com
+- johnchri - johnchri@student.chalmers.se
+- bardiaf - bardiaf@student.chalmers.se
+
+Usage: groupOneApp/urls.py
+"""
+
+
 import datetime
 import os
 import tempfile

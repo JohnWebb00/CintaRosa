@@ -1,3 +1,10 @@
+"""
+Authors:
+- johnchri - johnchri@student.chalmers.se
+
+Usage: groupOneApp/views.py
+"""
+
 from django.contrib import admin
 from .models import ImageData, ML_Model
 from .models import User
