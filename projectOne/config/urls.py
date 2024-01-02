@@ -1,6 +1,6 @@
 """
 Authors:
-- sejal - ???
+- sejal - sejal@student.chalmers.se
 - johnchri - johnchri@student.chalmers.se
 
 Usage: Settings throughout entire project

@@ -1,7 +1,6 @@
 """
 Authors:
 - zsolnai - georg.zsolnai123@gmail.com
-- ???
 
 Usage: groupOneApp/views.py
 """

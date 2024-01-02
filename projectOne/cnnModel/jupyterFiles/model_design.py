@@ -1,6 +1,6 @@
 """
 Authors:
-- bardiaf - gusforoba@student.gu.se
+- bardiaf - bardiaf@student.chalmers.se
 - ...
 
 Usage: model prototype version 1 - used in cnnModel/models.py

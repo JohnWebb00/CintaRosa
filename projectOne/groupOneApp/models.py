@@ -1,7 +1,7 @@
 """
 Authors:
-- ciuchta - ??
-- sejal - ??
+- ciuchta - ciuchta@chalmers.se
+- sejal - sejal@student.chalmers.se
 - zsolnai - georg.zsolnai123@gmail.com
 - johnchri - johnchri@student.chalmers.se
 

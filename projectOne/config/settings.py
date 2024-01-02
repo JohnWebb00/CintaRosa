@@ -1,8 +1,8 @@
 """
 Authors:
 - zsolani - georg.zsolnai123@gmail.com
-- sejal - ???
-- bardiaf - gusforoba@student.gu.se
+- sejal - sejal@student.chalmers.se
+- bardiaf - bardiaf@student.chalmers.se
 
 Usage: Settings throughout entire project
 

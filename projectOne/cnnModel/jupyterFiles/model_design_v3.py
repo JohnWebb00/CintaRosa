@@ -5,7 +5,7 @@
 
 """
 Authors:
-- bardiaf - gusforoba@student.gu.se
+- bardiaf - bardiaf@student.chalmers.se
 - ...
 
 Usage: model prototye version 3

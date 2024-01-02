@@ -1,8 +1,8 @@
 """
 Authors:
-- bardiaf - gusforoba@student.gu.se
+- bardiaf - bardiaf@student.chalmers.se
 - zsolnai - georg.zsolnai123@gmail.com
-- sejal - ??
+- sejal - sejal@student.chalmers.se
 
 Usage: groupOneApp/views.py
 """
