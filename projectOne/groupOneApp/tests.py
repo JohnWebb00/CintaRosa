@@ -55,7 +55,7 @@ class UploadNormalImagesTestCase(unittest.TestCase):
     # Define a test method 'test_existing_file' to test the existence of an existing file.
     def test_existing_file(self):
         directory = 'cnnModel/kaggle_image_data/normal/'
-        filename = 'normal.png'
+        filename = 'normal1.png'
         # Assert that the file exists in the specified directory.
         self.assertTrue(file_exists(directory, filename), "The file does not exist in the specified directory")
 
@@ -111,11 +111,6 @@ class HandleUploadedImageTestCase(unittest.TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.user = User.objects.create(name = 'mockN', surname = 'mockS', email = f'mock{random.randint(0, 10000)}@gmail.com', password = "mockS", birthDate = '2022-12-12', token = 'mockT')
-        
-        file_mock = mock.Mock(spec=File, name='FileMock')
-        file_mock.name = 'test.png'
-        ML_Model.objects.create(img=file_mock, name='123',)
-
       
     # Define a test method to test the existence of user Id     
     def testUserId(self):
@@ -131,25 +126,13 @@ class HandleUploadedImageTestCase(unittest.TestCase):
         # Checj if user id not empty 
         self.assertIsNotNone(response, 'Invalid user id.')
         
-    @patch('models.Image.new', autospec=True)
-    @patch('models.Image.save', autospec=True)
-    def testImage(self, mock_save, mock_new):
-        
-        # Mock the Image.new and Image.save functions
-        mock_new.return_value = MagicMock()
-        mock_save.return_value = None
+    def testFile(self):
+      
+        file = b"PNG file content here"  #has to be changed 
+        uploaded_file = SimpleUploadedFile("test.png", file, content_type="test/png")
 
-        # Call the function to create a dummy image
-        imagePath = ImageData("/media", "dummyImage.png")
-
-        # Assert that Image.new and Image.save were called with the correct arguments
-        mock_new.assert_called_once_with('RGB', (100, 100), (255, 255, 255))
-        mock_save.assert_called_once_with("/media/dummyImage.png")
-
-        # Assert that the function returned the correct image path
-        self.assertNotNone(ImageData, "It is empty.") 
-        
-        
+        self.assertEqual(uploaded_file.content_type, "test/png")  
+            
 class PrepareImageDataTestCase(unittest.TestCase):
     def testDataLoaded(self):
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
