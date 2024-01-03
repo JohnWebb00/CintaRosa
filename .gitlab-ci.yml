@@ -1,3 +1,10 @@
+### Authors:
+
+# - zsolnai - georg.zsolnai123@gmail.com
+# - johnchri - johnchri@student.chalmers.se
+
+### Usage: project repository pipeline
+
 stages:
   - build
   - deploy
@@ -11,12 +18,12 @@ build_image:
   script:
     - cd $CI_PROJECT_DIR/projectOne
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest .
-    - docker push registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest
+    - docker build -t registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1-part2:latest .
+    - docker push registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1-part2:latest
     - echo "Image built"
   after_script:
     #strip image
-    - docker rmi --force registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1:latest
+    - docker rmi --force registry.git.chalmers.se/courses/dit826/2023/group1/dit826-group1-part2:latest
 
 deploy_image:
   image: google/cloud-sdk

@@ -1,3 +1,14 @@
+"""
+Authors:
+- ciuchta - ciuchta@chalmers.se
+- sejal - sejal@student.chalmers.se
+- zsolnai - georg.zsolnai123@gmail.com
+- johnchri - johnchri@student.chalmers.se
+- bardiaf - bardiaf@student.chalmers.se
+
+Usage: config/urls.py
+"""
+
 from django.urls import path, include
 from . import views 
 from django.conf import settings

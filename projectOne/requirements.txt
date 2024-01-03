@@ -1,3 +1,11 @@
+### Authors:
+
+# - zsolnai - georg.zsolnai123@gmail.com
+# - johnchri - johnchri@student.chalmers.se
+
+### Usage: Dockerfile
+
+
 ##Add project dependencies and libraries here for docker build
 Django==4.2.7
 django-environ>=0.7,<1.0
@@ -17,5 +25,9 @@ pandas
 matplotlib
 eli5
 pydot
+graphviz
 tensorflow
 opencv-python
+
+# Explainable AI
+lime

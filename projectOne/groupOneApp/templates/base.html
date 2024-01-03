@@ -1,3 +1,12 @@
+{% comment %} /* 
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+- johnchri - johnchri@student.chalmers.se
+- ciuchta - ciuchta@chalmers.se
+
+Usage: groupOneApp/views.py
+*/ {% endcomment %}
+
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -41,20 +50,24 @@
           Log out
         </button>
         {% elif current == 'predictionPage' %}
-        <div>
-          <button type="button" class="btn btn-light button logout">
-            Log out
-          </button>
+        <div id="dash-and-logout-btns">
+          <div>
+            <button
+              type="button"
+              class="btn btn-light dashboard-button"
+              onclick="window.location.href='{% url 'userDashBoard' %}'"
+            >
+              Dashboard
+            </button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-light logIn-button logout">
+              Log out
+            </button>
+          </div>
         </div>
-        <div>
-          <button
-            type="button"
-            class="btn btn-light dashboard-button"
-            onclick="window.location.href='{% url 'userDashBoard' %}'"
-          >
-            Dashboard
-          </button>
-        </div>
+        {% elif current == 'adminDashboard' %}
+        <h1 class="admin-spanner">Admin Dashboard</h1>
         {% endif %}
       </div>
     </nav>
@@ -82,8 +95,8 @@
           });
       });
     </script>
-    {% block title %} {% endblock %} {% block content %} {% endblock %}
-
+    {% block title %} {% endblock %} 
+    {% block content %} {% endblock %}
     <footer>
       CINTA ROSA: AGATA CIUCHTA, BARDIA FOROORAGHI, GEORG ZSOLNAI, JOHN
       CHRISTOPHER WEBB, SEJAL ULHAS KANASKAR

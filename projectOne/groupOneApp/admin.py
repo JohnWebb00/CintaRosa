@@ -1,3 +1,10 @@
+"""
+Authors:
+- johnchri - johnchri@student.chalmers.se
+
+Usage: groupOneApp/views.py
+"""
+
 from django.contrib import admin
 from .models import ImageData, ML_Model
 from .models import User
@@ -8,13 +15,7 @@ class ImageAdmin(admin.ModelAdmin):
 
 class ML_ModelAdmin(admin.ModelAdmin):
     readonly_fields = ('ml_model_id',)
-    
-#### Custom Admin login to go to the Model admin settings
-# class CustomAdminSite(AdminSite):
-#     def index(self, request, extra_context=None):
-#         return redirect('adminDashboard')
 
-# admin_site = CustomAdminSite(name='customadmin')
 
 # Register your models here.
 admin.site.register(ImageData, ImageAdmin)

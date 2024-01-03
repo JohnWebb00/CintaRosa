@@ -1,14 +1,47 @@
-.retrain_btn{
+/* 
+Authors:
+- zsolnai - georg.zsolnai123@gmail.com
+
+Usage: groupOneApp/templates/adminDashboard.html
+*/
+
+#title_text {
+    margin: 1rem;
+}
+
+.retrain {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    width: 15rem;
+}
+
+.retrain-div{
+    display: flex;
+    flex-direction: row;
+    gap: 12rem;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.25rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.retrain-body {
+    padding-bottom: 3rem;
+    width: 100%;
+}
+
+.retrain-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 2rem;
 }
 
 #trainBtn {
-    width: 10%
+    width: 5rem;
+    margin-top: 0rem;
 }
 
 .retrain-allmodels{
@@ -22,17 +55,14 @@
     flex-wrap: wrap;
 }
 
-.retrain {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-right: 2rem;
+.curr_model_text {
+    padding-bottom: 3rem;
+    padding-top: 1rem;
 }
 
 .tables {
     display: flex;
     flex-direction: column;
-    padding-left: 2rem;
 }
 
 .card-body {

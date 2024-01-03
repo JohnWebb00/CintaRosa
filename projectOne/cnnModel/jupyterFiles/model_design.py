@@ -1,3 +1,11 @@
+"""
+Authors:
+- bardiaf - bardiaf@student.chalmers.se
+- ...
+
+Usage: model prototype version 1 - used in cnnModel/models.py
+"""
+
 import keras
 import os
 import cv2
