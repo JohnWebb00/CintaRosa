@@ -9,10 +9,9 @@ from django.http import HttpResponse
 from groupOneApp.models import ML_Model, Prediction
 from groupOneApp.models import User
 import random
-from django.core.files.uploadedfile import SimpleUploadedFile
 from cnnModel.models import BreastCancerModelDetection
 from django.core.files import File
-from groupOneApp.models import ImageData
+from django.test.utils import teardown_test_environment
 
 def file_exists(directory, filename):
     # Create the full file path by joining the directory and filename.
@@ -25,7 +24,7 @@ class UploadBenignImagesTestCase(unittest.TestCase):
     # Define a test method 'test_existing_file' to test the existence of an existing file.
     def test_existing_file(self):
         directory = 'cnnModel/kaggle_image_data/benign/'
-        filename = 'benign1.png'
+        filename = 'benign (1).png'
         # Assert that the file exists in the specified directory.
         self.assertTrue(file_exists(directory, filename), "The file does not exist in the specified directory")
 
@@ -40,7 +39,7 @@ class UploadMalignantImagesTestCase(unittest.TestCase):
     # Define a test method 'test_existing_file' to test the existence of an existing file.
     def test_existing_file(self):
         directory = 'cnnModel/kaggle_image_data/malignant/'
-        filename = 'malignant1.png'
+        filename = 'malignant (1).png'
         # Assert that the file exists in the specified directory.
         self.assertTrue(file_exists(directory, filename), "The file does not exist in the specified directory")
 
@@ -55,7 +54,7 @@ class UploadNormalImagesTestCase(unittest.TestCase):
     # Define a test method 'test_existing_file' to test the existence of an existing file.
     def test_existing_file(self):
         directory = 'cnnModel/kaggle_image_data/normal/'
-        filename = 'normal1.png'
+        filename = 'normal (1).png'
         # Assert that the file exists in the specified directory.
         self.assertTrue(file_exists(directory, filename), "The file does not exist in the specified directory")
 
@@ -120,22 +119,43 @@ class HandleUploadedImageTestCase(unittest.TestCase):
         
         # Simulate a logged-in user by setting request.user manually.
         request.user = self.user
-       
+
+        # Pass request to the function
         response = handle_uploaded_image(request)
     
-        # Checj if user id not empty 
+        # Check if user id not empty 
         self.assertIsNotNone(response, 'Invalid user id.')
-        
+    
+    # Define a test method to test the existence of data    
     def testFile(self):
-      
-        file = b"PNG file content here"  #has to be changed 
-        uploaded_file = SimpleUploadedFile("test.png", file, content_type="test/png")
+        
+        # Create an instance of a POST request.
+        request = self.factory.post('/upload', data={'userId': self.user.userId})
+        
+        # Simulate a logged-in user by setting request.user manually.
+        request.user = self.user
+        
+        try:
+            my_file = File(open('cnnModel/kaggle_image_data/benign/benign (1).png', "rb"))
+        except(FileNotFoundError):
+            self.fail("No images uploaded to application.")
 
-        self.assertEqual(uploaded_file.content_type, "test/png")  
-            
+        request.FILES.update({"file": my_file})
+        
+         # Pass request to the function
+        response = handle_uploaded_image(request)
+        
+        self.assertIsNotNone(response, 'No image found.')
+        
+        #Cleanup
+        User.objects.get(userId = self.user.userId).delete()
+        
+# Test the prepare_image_data in the models.py            
 class PrepareImageDataTestCase(unittest.TestCase):
     def testDataLoaded(self):
+        # Define data path
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
+        # Convert to string
         dataPath = str(data_OSPath)
         try:
             data = BreastCancerModelDetection.prepare_image_data(dataPath)
@@ -146,21 +166,30 @@ class PrepareImageDataTestCase(unittest.TestCase):
     
     # Define a test method to check if there is enough data to perform splitting into sets
     def testDataAmout(self):
+         # Define data path
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
+        # Convert to string
         dataPath = str(data_OSPath)
+        # Fetch data
         data = BreastCancerModelDetection.prepare_image_data(dataPath)
-        
+       
+        #Convert to int
         datasize = int(len(data))
+        # Check if data is big enough
         self.assertLess(datasize, 500, "Not enough data. Should be more than 500.") 
         
     # Define a test method to test if data was splitted accordingly to the principles
-    def testDataSplitted(self):  
+    def testDataSplitted(self):
+        # Define data path
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
+        # Convert to string
         dataPath = str(data_OSPath)
-        #datasize = int(len(data))
+        # Fetch datasets
         train_data, validation_data, test_data = BreastCancerModelDetection.prepare_image_data(dataPath)
 
+        # Calculate data size
         datasize = len(list(train_data)) + len(list(validation_data)) + len(list(test_data))
+        
         # Specify the expected size of data after splitting
         expected_train_size = int(datasize * 0.7)
         expected_validation_size = int(datasize * 0.2) + 1
@@ -170,9 +199,10 @@ class PrepareImageDataTestCase(unittest.TestCase):
         self.assertEqual(len(list(train_data)), expected_train_size, "Wrong size of the trainig data set.")
         self.assertEqual(len(list(validation_data)), expected_validation_size, "Wrong size of the validation data set.")
         self.assertEqual(len(list(test_data)), expected_test_size, "Wrong size of the test data set.")
-       
-        
-# Check if the script is run as the main program.
+    
+    # Check if the script is run as the main program.
 if __name__ == '__main__':
     # Run the test cases using 'unittest.main()'.
     unittest.main()
+    # Clean up the test environment 
+    teardown_test_environment()
