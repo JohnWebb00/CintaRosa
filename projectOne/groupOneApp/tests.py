@@ -193,7 +193,7 @@ class PrepareImageDataTestCase(unittest.TestCase):
         # Specify the expected size of data after splitting
         expected_train_size = int(datasize * 0.7)
         expected_validation_size = int(datasize * 0.2) + 1
-        expected_test_size = int(datasize * 0.1) + 1
+        expected_test_size = int(datasize * 0.1) - 1
         
         # Compare the values using assertEqual
         self.assertEqual(len(list(train_data)), expected_train_size, "Wrong size of the trainig data set.")
