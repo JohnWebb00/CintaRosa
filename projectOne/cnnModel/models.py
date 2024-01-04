@@ -71,17 +71,22 @@ class BreastCancerModelDetection(models.Model):
         # if the image is an image, dont need to pass string
         img1 = image_path
         
-        # It ensures image_path is a string
-        if isinstance(image_path, str):
-            #raise ValueError("Image path should be a string.")
-            # It reads the image from path
-            img1 = cv2.imread(image_path)
-        # if the instance is not a path but an actual image
+        if not os.path.exists(image_path):
+            raise TypeError(f"File not found at {image_path}")
         
-        # Turns img to grayscale
-        # img2 = tf.image.rgb_to_grayscale(img1)
-        resized = tf.image.resize(img1, (256, 256)) 
-        final = np.expand_dims((resized / 255), 0)
+        # It ensures image_path is a string
+        
+        else:
+            if isinstance(image_path, str):
+                #raise ValueError("Image path should be a string.")
+                # It reads the image from path
+                img1 = cv2.imread(image_path)
+            # if the instance is not a path but an actual image
+            
+            # Turns img to grayscale
+            #img2 = tf.image.rgb_to_grayscale(img1)
+            resized = tf.image.resize(img1, (256, 256))
+            final = np.expand_dims((resized / 255), 0)
 
         return final
 
@@ -250,6 +255,8 @@ class BreastCancerModelDetection(models.Model):
                 # Get the predicted class (via the index at which the max value is) from the prediction (meaning the final class predicted)
                 predicted_class = np.argmax(prediction_arr)
                 
+                # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img
+            
                 # Create lime explainer
                 explainer = lime_image.LimeImageExplainer(random_state=42)
                 
@@ -272,7 +279,7 @@ class BreastCancerModelDetection(models.Model):
                 
                 # returns int (0 == benign, 1 == malignant, 2 == normal) and explainable AI img and mask for explanation
                 return predicted_class, finalImage, prediction_arr
-            except FileNotFoundError:
-                print(f"File not found at {pathOfImg}")
-                
-
+            except FileNotFoundError as error:
+                raise FileNotFoundError(f"File not found at {pathOfImg}") from error
+            except TypeError as error:
+                raise TypeError(f"File not found at {pathOfImg}") from error
