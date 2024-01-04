@@ -165,7 +165,7 @@ class PrepareImageDataTestCase(unittest.TestCase):
         
     
     # Define a test method to check if there is enough data to perform splitting into sets
-    def testDataAmout(self):
+    def testDataAmount(self):
          # Define data path
         data_OSPath = os.path.join("cnnModel", "kaggle_image_data")
         # Convert to string
