@@ -71,7 +71,7 @@ The primary purpose of our project is to contribute to the early detection of br
 <a name="installation"></a>
 
 ### **Installation**
-1. Go to https://git.chalmers.se/courses/dit826/2023/group1/dit826-group1
+1. Go to https://git.chalmers.se/courses/dit826/2023/group1/dit826-group1-part2
 2. Clone the project into a directory of your choosing using either SSH or HTTPS
 3. To run the project, open the project on terminal and run the following steps:
 ```bash
