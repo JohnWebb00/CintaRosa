@@ -35,6 +35,7 @@ class modelTests(unittest.TestCase):
             Dropout(0.25),
             Conv2D(256, (3, 3), activation='relu'),
             MaxPooling2D((2, 2)),
+            Dropout(0.25),
             Flatten(),
             Dense(512, activation='relu'),
             Dropout(0.5),
