@@ -97,7 +97,7 @@ class BreastCancerModelDetection(models.Model):
         # Read datasets
         data = tf.keras.utils.image_dataset_from_directory(dataPath, batch_size=32, label_mode='int') #, color_mode="grayscale")
         data = data.map(lambda x, y: (x / 255, y))
-
+        
         # calculate train, validation, test size via 70/20/10 split
         train_size = int(len(data) * .7)
         validation_size = int(len(data) * .2) + 1

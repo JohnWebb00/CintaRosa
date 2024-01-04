@@ -12,7 +12,6 @@ Usage: groupOneApp/urls.py
 
 import datetime
 import os
-import tempfile
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -37,6 +36,7 @@ from django.http import JsonResponse
 import re
 from django.utils import timezone
 from django.contrib.admin.views.decorators import staff_member_required
+
 
 # Create gloabl model and load current h5 weights on model
 model = BreastCancerModelDetection()
@@ -298,7 +298,8 @@ def uploadImage(request):
     except Exception as e:
         # Handle the exception, e.g., log the error or return an error response.
         return HttpResponseServerError("Error processing image")
-    
+
+#TODO check return statement   
 def trainModelNew(request):
     # Retrain model, saving h5 file returning the accuracy
     train_res, test_res, val_res, modelPath, snsHeatmap = model.train_breast_cancer_model_detection()
@@ -323,27 +324,38 @@ def trainModelNew(request):
 def selectActiveModel(request):
     data = request.POST
     #save the data of the model name from the body of the ajax script
-    fullName = data["modelFullName"]
-    #split the model name to extract the model version number
-    modelNumber = int(re.search(r'\d+', fullName).group())
+    if data is None:
+        return HttpResponse("Invalid POST request", status=400)
+    
+    try:
+        fullName = data["modelFullName"]
+        modelNumber = int(re.search(r'\d+', fullName).group())
+    except (KeyError, ValueError, AttributeError):
+        return HttpResponse("Invalid modelFullName format", status=400)
+
     #set the model version number to the newly activated model version number
     model.versionInt = modelNumber
     #recreate the active model 
     model.createModel()
-    
-    #query the current active model
-    oldActiveModel = ML_Model.objects.get(currentlyUsed=True)
-    
-    #set its active status to false and save
-    oldActiveModel.currentlyUsed = False
-    oldActiveModel.save()
-    
-    #find the desired model to be activated by id
-    newActiveModel = ML_Model.objects.get(ml_model_id=modelNumber)
-    
-    #Set the active status of the model to be true and save
-    newActiveModel.currentlyUsed = True
-    newActiveModel.save()
+        
+    try:
+        #query the current active model
+        oldActiveModel = ML_Model.objects.get(currentlyUsed=True)
+        
+        #set its active status to false and save
+        oldActiveModel.currentlyUsed = False
+        oldActiveModel.save()
+        
+        #find the desired model to be activated by id
+        #TODO write test to check if the ID exists
+        newActiveModel = ML_Model.objects.get(ml_model_id=modelNumber)
+        
+        #Set the active status of the model to be true and save
+        newActiveModel.currentlyUsed = True
+        newActiveModel.save()
+    except ML_Model.DoesNotExist:
+        return HttpResponse(f"Model with ID {modelNumber} does not exist", status=404)
+
 
     return HttpResponse("/adminDashboard/") 
 

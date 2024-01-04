@@ -46,7 +46,7 @@ footer {
   line-height: 5rem; /*adjusts the position of footer text */
   }
 
-.logIn-button{
+.button{
   width: 6rem;
   height: 2.5rem;
   margin-right: 5rem;
@@ -106,18 +106,7 @@ footer {
   height: 100vh; 
 }
 
-.passUpdate {
-  background-color: #E9D3D0;
-  width: 18rem;
-  height: 13rem;
-  color: white;
-  text-transform: uppercase; 
-  font-size: medium;
-  font-family: 'Saira Condensed';
-  letter-spacing: 0.125rem;
-  border-radius:  0.625rem;
-  border-style: hidden;
-}
+
 
 .submitBtn {
   background-color: #DF5C93;
@@ -265,8 +254,6 @@ border-radius:  0.625rem;
 border-style: hidden;
 padding-left: 3rem;
 }
-
-
 
 .predicButton{
   margin-top: 1rem;

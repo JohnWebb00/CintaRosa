@@ -33,7 +33,7 @@ PREDICTION = (
 
 # Database models here.
 
-#Stores the breast cancer tumor images
+#NOT IN USE
 class ImageData(models.Model):
     image_id = models.AutoField(primary_key=True, null=False)
     image = models.ImageField(null = False, upload_to='groupOneApp/image_test') #change to BinaryField to store image as BLOB
