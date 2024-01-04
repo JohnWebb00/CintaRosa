@@ -47,8 +47,8 @@ deploy_image:
     - echo "Deployment CINTA-ROSA-APP to K8S"
     - ls $CI_PROJECT_DIR/k8s-files
 
-    # Delete pods in namespace
-    - kubectl delete pods -l app=cinta-rosa-app
+    # Delete pods in namespace via deleting deployment
+    - kubectl delete deployment my-deployment-cinta-rosa
     # Apply manifest to the node
     - kubectl apply -f $CI_PROJECT_DIR/k8s-files/.
     # Check pod is active and running with image
