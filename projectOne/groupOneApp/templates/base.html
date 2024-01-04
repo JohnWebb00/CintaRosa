@@ -40,13 +40,13 @@ Usage: groupOneApp/views.py
         {% if current == 'homePage' %}
         <button
           type="button"
-          class="btn btn-light button"
+          class="btn btn-light logIn-button"
           onclick="window.location.href='{% url 'userLogin' %}'"
         >
           Log in
         </button>
         {% elif current == 'userLogin' %} {% elif current == 'userDashboard' %}
-        <button type="button" class="btn btn-light button logout">
+        <button type="button" class="btn btn-light logIn-button logout">
           Log out
         </button>
         {% elif current == 'predictionPage' %}
@@ -61,7 +61,7 @@ Usage: groupOneApp/views.py
             </button>
           </div>
           <div>
-            <button type="button" class="btn btn-light button logout">
+            <button type="button" class="btn btn-light logIn-button logout">
               Log out
             </button>
           </div>
